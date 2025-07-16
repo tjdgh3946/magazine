@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Magazine</title>
+  <style>
+    /* ──────────────────── 타이포그래피 & 레이아웃 ──────────────────── */
+    body{
+      font-family:"Hiragino Kaku Gothic ProN",sans-serif;
+      background: linear-gradient(
+        180deg,
+        #ffffff 70%,
+        rgba(200, 200, 200, 0.15) 100%
+      );
+      padding:40px;
+      text-align:center;
+    }
+    .magazine-title{
+      font-family:'Georgia',serif;
+      font-size:2.5rem;
+      color:#000;
+      letter-spacing:2px;
+      margin-bottom:1em;
+      text-shadow:2px 2px 5px rgba(0,0,0,.2);
+    }
+
+    /* ──────────────────── 갤러리 / 카드 ──────────────────── */
+    .gallery{
+      display:flex;
+      flex-wrap:wrap;
+      gap:20px;
+      justify-content:left;
+    }
+    .card{
+      width:260px;
+      background:#fff;
+      box-shadow:0 4px 10px rgba(0,0,0,.1);
+      border-radius:20px;
+      overflow:hidden;
+      padding-bottom:15px;
+    }
+    .card img{
+      width:100%;
+      height:auto;
+      border-bottom:1px solid #eee;
+      border-radius:20px 20px 0 0;
+      cursor:pointer;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 32px rgba(0,0,0,0.21), 0 1.5px 6px rgba(0,0,0,.10);
+      /* 위로 살짝 띄우기 */
+      transform: translateY(-12px) scale(1.03);
+      z-index: 2;
+    }
+    .caption{
+      font-size:1.05rem;
+      color:#333;
+      padding:10px 15px;
+      text-shadow:0 2px 4px rgba(0,0,0,.25);
+      line-height:1.6;
+    }
+    .caption-text{
+      position:relative;
+      overflow:hidden;
+      max-width:100%;
+    }
+
+    /* ──────────────────── 툴팁 (캡션·검색) ──────────────────── */
+    .search-icon {
+      font-size: 1.9rem;    /* 또는 원하는 값, 숫자 키울수록 커짐 */
+      width: 42px;          /* 또는 auto, line-height와 같이 조정 */
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* background: #eee;   // 원할 때 배경 추가 */
+      border-radius: 50%;   /* 원형, 선택사항 */
+      cursor: pointer;
+      /* padding 조절로 아이콘과 클릭영역 키울 수도 있음 */
+    }
+    .caption-text::after,
+    .search-icon::after{
+      content:attr(data-caption);
+      position:absolute;
+      bottom:125%;
+      left:50%;
+      transform:translateX(-50%);
+      background:#000;
+      color:#fff;
+      padding:6px 10px;
+      font-size:.75rem;
+      border-radius:6px;
+      white-space:nowrap;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+      z-index:20;
+      box-shadow:0 2px 6px rgba(0,0,0,.3);
+      max-width:300px;
+    }
+    .search-icon::after{content:"Search by keyword";}
+    .search-icon:hover,
+    /* 툴팁 활성화는 아래처럼 */
+    .caption-text:hover::after,
+    .search-icon:hover::after {
+      opacity: 1;
+    }
+
+    /* ──────────────────── 모달 ──────────────────── */
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:99;
+      background:rgba(0,0,0,.6);
+      justify-content:center;
+      align-items:center;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden; /* ✅ 이미지가 넘치지 않도록 */
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content.side-by-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    }
+
+    .modalImgWrap {
+      max-width: 50vw;
+      max-height: 90vh;
+      width: 100%;
+      height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative; 
+      cursor: grab; 
+    }
+
+    .modalImgWrap:active {
+      cursor: grabbing;
+    }
+
+    /* 이미지만 표시하는 영역 - 남는 공간 모두 사용 */
+    .modalImgArea {
+      flex: 1 1 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* 이미지 본체 */
+    .modalImgArea img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+      user-select: none;
+      -webkit-user-drag: none;
+      border-radius: 10px;
+      pointer-events: auto;
+    }
+
+    /* 하단 컨트롤 영역 */
+    .image-controls {
+      width: 100%;
+      padding-top: 10px;
+      padding-bottom: 6px;
+      background: #fff; /* 필요하다면 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .zoom-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .page-indicator {
+      font-size: 0.95rem;
+      color: #888;
+    }
+
+    /* 오른쪽 metadata에는 caption만 남게 */
+    .modal-meta {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow-y: auto;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      color: #444;
+    }
+
+    .modal-meta .caption {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #444;
+    }
+
+    /* 필요하다면 .modal-meta의 나머지 요소 숨기기 */
+    .modal-meta .zoom-controls,
+    .modal-meta .page-indicator {
+      display: none;
+    }
+
+    @media (max-width: 850px) {
+    .modal {
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .modal-content.side-by-side {
+      display: flex;
+      flex-direction: column;
+      height: 90vh; /* 전체 모달 높이 */
+      overflow: hidden;
+    }
+
+    .modalImgWrap {
+      flex: 1 1 auto; /* 90% for image, 10% for caption */
+      width: 100%;
+      max-width: 90vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto; 
+    }
+
+    .modalImgArea {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modalImgArea img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .modal-meta {
+      flex: 0 0 10%;
+      width: 100%;
+      overflow: hidden;
+      padding: 5px 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-meta .caption {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: #444;
+      white-space: pre-line;
+      word-break: break-word;
+      text-align: center;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      z-index: 10;
+    }
+    }
+
+    .close{
+      position:absolute;
+      top:20px;right:30px;
+      font-size:2rem;
+      color:#fff;
+      cursor:pointer;
+    }
+    .nav {
+    position: absolute;
+    top: 50%;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: rgb(212, 212, 212);
+    cursor: pointer;
+    user-select: none;
+    transform: translateY(-50%);
+    }
+
+    .nav.prev { left: 20px; }
+    .nav.next { right: 20px; }
+    .page-indicator {
+      color: #ccc;
+      font-size: 0.85rem;
+      margin: 5px 0;
+    }
+    /* ──────────────────── 사이드바 / 키워드 ──────────────────── */
+    .container{display:flex;gap:30px;}
+
+    .sidebar-title {
+      font-family: 'Georgia', 'Hiragino Kaku Gothic ProN', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: #222;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-left: 10px;
+      margin-bottom: 12px;
+      line-height: 1.2;
+      text-shadow:2px 2px 5px rgba(0,0,0,.2);
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+
+    .sidebar{
+      height: 500px;
+      overflow: hidden;
+      width:200px;padding-top:20px;font-size:.95rem;
+    }
+    .sidebar .keyword{
+      font-family:'Georgia',serif;
+      color:#222;
+      cursor:pointer;margin-bottom:10px;
+      text-shadow:0 1px 2px rgba(0,0,0,.25);
+      background:#f2f2f2;padding:6px 12px;border-radius:6px;
+      transition:background .2s ease;
+    }
+    .sidebar .keyword:hover{background:#ddd;}
+    .keywordScroller {
+      height: 100%; 
+      overflow: hidden;
+      position: relative;
+    }
+    .keywordList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      will-change: transform;
+    }
+    .sidebar:hover .keywordList {
+      animation-play-state: paused;
+    }
+    @keyframes slide-vertical {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-50%); }
+    }
+
+    .card-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px; /* 줄바꿈/좌우 간격 */
+      margin-top: 24px;
+      margin-bottom: 6px;
+      justify-content: left; /* 카드글, 캡션 왼쪽 정렬 시 */
+      max-height: 130px;        /* 고정 높이 (원하는 값으로 조정, 예: 2줄 정도) */
+      overflow-y: auto;        /* y축으로 넘어가면 스크롤 */
+      overflow-x: hidden;      /* x축으로는 못 넘치게 */
+    }
+
+    .keyword {
+      font-size: 0.97em;
+      background: #f3f4f8;
+      color: #5191fa;
+      border-radius: 14px;
+      padding: 5px 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      border: 1px solid #dde3ed;
+      box-shadow: 0 1px 2px #0002;
+      transition: background 0.2s, color 0.2s;
+    }
+    .keyword:hover {
+      background: #dde6f8;
+      color: #1c3772;
+    }
+    .keyword.active {
+      background: black;
+      color: white;
+      font-weight: bold;
+    }
+    /* 스크롤바가 너무 두껍게 나올 경우, 예쁜 스크롤바도 추가 가능 (크롬/엣지/사파리) */
+    .card-keywords::-webkit-scrollbar {
+      height: 0;
+      width: 6px;
+    }
+    .card-keywords::-webkit-scrollbar-thumb {
+      background: #dde3ed;
+      border-radius: 8px;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;  /* ✅ 수직 배열 */
+      gap: 10px;
+      align-items: flex-end;   /* 오른쪽 정렬 */
+    }
+    /* ──────────────────── 검색박스 ──────────────────── */
+    .search-box{
+      position:absolute;top:40px;right:15px;z-index:10;
+      display:flex;align-items:center;gap:10px;
+    }
+    .search-box input{
+      padding:8px 12px;font-size:1.15rem;border-radius:6px;border:1px solid #ccc;
+      box-shadow:0 2px 4px rgba(0,0,0,.1);
+      transition:width .3s ease,opacity .2s ease;
+      width:0;opacity:0;pointer-events:none;
+    }
+    .search-box.active input{width:200px;opacity:1;pointer-events:all;}
+
+    
+    .zoom-controls {
+      margin-bottom: 10px;
+    }
+
+    .zoom-controls button {
+      font-size: 1.2rem;
+      margin-right: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #eee;
+      transition: background 0.2s;
+    }
+
+    .zoom-controls button:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="magazine-title">MAGAZINE</div>
+
+  <!-- 사이드바 & 갤러리 -->
+  <div class="container">
+    <aside class="sidebar" style="height: 660px; overflow: hidden;">
+      <div class="sidebar-title">Activate a Topic 🖲️</div>  
+      <div class="keywordScroller">
+        <div class="keywordList"></div>
+      </div>
+    </aside>
+    <div class="main-content">  
+    <!-- 🔍 검색 -->
+    <div class="menu">
+      <div class="search-box" id="searchBox">
+        <span class="search-icon" id="searchIcon">🔎</span>
+        <input type="text" id="searchInput" placeholder="Search by keyword…" />
+      </div>
+    </div>
+      <section class="gallery" id="gallery"></section>
+    </div>
+  </div>
+
+<!-- 모달 뷰어 -->
+<div class="modal" id="slideModal" aria-hidden="true">
+  <!-- 닫기 버튼 -->
+  <button class="close" id="modalClose" aria-label="close">×</button>
+
+  <div class="modal-content side-by-side">
+    <div class="modalImgWrap" id="modalImgWrap">
+      <div class="modalImgArea">
+        <img id="modalImage" alt="Slide" />
+      </div>
+      <div class="image-controls">
+        <div class="zoom-controls">
+          <button id="zoomIn">＋</button>
+          <button id="zoomOut">−</button>
+        </div>
+        <div class="page-indicator" id="modalPageIndicator"></div>
+      </div>
+    </div>
+  
+    <!-- 우측엔 caption만 -->
+    <div class="modal-meta">
+      <div class="caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <!-- 이미지 전환 네비게이션 -->
+  <button class="nav prev" id="modalPrev" aria-label="previous image">←</button>
+  <button class="nav next" id="modalNext" aria-label="next image">→</button>
+</div>
+
+  <!-- 이미지 메타데이터 (imageData 변수 정의) -->
+  <script src="metadata.js"></script>
+
+  <!-- 갤러리 스크립트 -->
+  <script>
+  /* ========================== 유틸 ========================== */
+  /** HTML attribute용 최소 이스케이프 */
+  function escapeCSSAttr(str) {
+    return str
+      .replace(/\\/g, "\\\\")      // must go first!
+      .replace(/"/g, "\\0022 ")    // "
+      .replace(/'/g, "\\0027 ")    // '
+      .replace(/</g, "")           // strip <
+      .replace(/>/g, "")           // strip >
+      .replace(/\n/g, " ")         // newlines to space
+      .replace(/&/g, "&");         // optional: entity pass-through
+  }
+
+  const escapeAttr = s=>s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/[\r\n]+/g," ");
+
+  /* ========================== DOM 캐시 ========================== */
+  const gallery      = document.getElementById('gallery');
+  const keywordPanel = document.getElementById('keywordPanel');
+  const searchBox    = document.getElementById('searchBox');
+  const searchInput  = document.getElementById('searchInput');
+  const searchIcon   = document.getElementById('searchIcon');
+
+  const modal        = document.getElementById('slideModal');
+  const modalImg     = document.getElementById('modalImage');
+  const modalCap     = document.getElementById('modalCaption');
+  const modalClose   = document.getElementById('modalClose');
+
+  /* ========================== 모달 ========================== */
+  let modalImageList = [];
+  let modalIndex = 0; 
+  let slideIndex = 0;
+
+  function openModal(srcList, caption, date, index) {
+    // index: 전체 슬라이드 리스트 중에서 modal의 index
+    if (!Array.isArray(srcList)) srcList = [srcList]; // 단일 이미지일 경우
+
+    const modalId = `modal-${index}`;  // 각 모달에 고유 ID 부여
+
+
+    modalImageList = srcList;
+
+    updateModalImage();
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+  document.activeElement.blur(); 
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = 'auto';
+  window.history.pushState("", "", window.location.pathname); // 해시 제거
+  slideIndex = 0;
+  modalIndex = 0 ;  
+  }
+  modalClose.addEventListener('click', closeModal);
+  window.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+
+  /* ========================== 갤러리 렌더 ========================== */
+  function renderGallery(list) {
+  gallery.innerHTML = '';
+  list.forEach(data => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    // ✅ 대표 이미지 (첫 번째 이미지로 표시)
+    const img = document.createElement('img');
+    img.src = data.filename;  // e.g. "title.png"
+    img.alt = data.caption;
+
+    // ✅ 클릭 시 전체 시리즈를 openModal에 전달
+    img.addEventListener('click', () => {
+
+      modalIndex = list.indexOf(data);   
+      const totalImages = data.imageCount; 
+      const filenames = [];
+
+      for (let i = 0; i < totalImages; i++) {
+        const suffix = i === 0 ? '' : `_${i + 1}`;
+        const filename = data.filename.replace(/\.png$/, `${suffix}.png`);
+        filenames.push(filename);
+      }
+
+      window.location.hash = `#/${modalIndex + 1}`;
+
+      openModal(filenames, data.caption, data.date, modalIndex);
+      
+    });
+
+    // ✅ 캡션 영역
+    const capWrap = document.createElement('div');
+    capWrap.className = 'caption';
+
+    const keywordEl = document.createElement('div');
+    keywordEl.className = 'card-keywords'; // .caption-text 보단 .card-keywords 등으로 별도 분리 추천
+
+    data.keywords.forEach(k => {
+      const span = document.createElement('span');
+      span.className = 'keyword';
+      span.textContent = '#' + k.toLowerCase();
+      keywordEl.appendChild(span);
+    });
+
+    // 데이터 속성은 한 줄로 전체 스트링 조합해 저장
+    const keywordsText = '#' + data.keywords.map(k => k.toLowerCase()).join(' #');
+    keywordEl.setAttribute('data-keywords', escapeCSSAttr(keywordsText));
+
+    const dateSmall = document.createElement('small');
+    dateSmall.textContent = data.date;
+
+    capWrap.append(keywordEl, dateSmall);
+    card.append(img, capWrap);
+    gallery.append(card);
+
+    handleHashRouting();
+  });
+  }
+
+  /* ========================== 키워드 패널 ========================== */
+  const keywords = [...new Set(imageData.flatMap(i=>i.keywords.map(k=>k.toLowerCase())))];
+  const keywordListDiv = document.querySelector('.sidebar .keywordList');
+  const container = document.querySelector('.keywordScroller');
+  const list = container.querySelector('.keywordList');
+  
+  // 🔥 키워드 렌더링 + 이벤트 연결
+  function renderKeywords() {
+    list.innerHTML = "";
+
+    for (let repeat = 0; repeat < 2; repeat++) {
+      keywords.forEach(k => {
+        const btn = document.createElement('div');
+        btn.className = 'keyword';
+        btn.textContent = '#' + k;
+
+        // ✅ 클릭 이벤트
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();  // ✅ 중요
+          const keyword = e.currentTarget.dataset.keyword;
+          filterByKeyword(keyword);
+          filterByKeyword(k);
+        });
+
+        list.appendChild(btn);
+      });
+    }
+  }
+
+  // 🚀 초기 실행
+  renderKeywords();
+
+  // 🔍 키워드 필터링 함수
+  function filterByKeyword(k) {
+
+    const filtered = imageData.filter(i =>
+      i.keywords.map(x => x.toLowerCase()).includes(k)
+    );
+    
+    renderGallery(filtered);
+
+    // 🔥 선택된 키워드 강조
+    document.querySelectorAll('.keyword').forEach(el => {
+      const label = el.textContent.replace(/^#/, '').toLowerCase();
+      el.classList.toggle('active', label === k);
+    });
+  }
+
+
+  // 높이 계산
+  const singleListHeight = list.scrollHeight / 2;
+
+  let pos = 0;
+  let speed = 0.5; // 픽셀/프레임 (조절 가능)
+  let autoScroll = true;
+
+  function animate() {
+    if (autoScroll) {
+      pos += speed;
+      if (pos >= singleListHeight) {
+        pos = 0; // 완전 seamless!
+      }
+      list.style.transform = `translateY(-${pos}px)`;
+    }
+    requestAnimationFrame(animate);
+  }
+
+  container.addEventListener('mouseenter', () => autoScroll = false);
+  container.addEventListener('mouseleave', () => autoScroll = true);
+
+  animate();
+
+
+
+  /* ========================== 검색 ========================== */
+  function toggleSearch(){
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) searchInput.focus();
+    else{
+      searchInput.value='';
+      renderGallery(imageData);
+    }
+  }
+  searchIcon.addEventListener('click',toggleSearch);
+  searchInput.addEventListener('input',()=>{
+    const q = searchInput.value.toLowerCase();
+    renderGallery(imageData.filter(item=>
+      Array.isArray(item.keywords)&&item.keywords.some(k=>k.toLowerCase().includes(q))
+    ));
+  });
+  // 포커스 밖 클릭 시 검색창 닫기
+  document.addEventListener('click', e => {
+  // 검색창이 열려 있고 + 외부 클릭일 때만 실행
+    if (searchBox.classList.contains('active') && !searchBox.contains(e.target)) {
+      searchBox.classList.remove('active');
+      searchInput.value = '';
+      renderGallery(imageData);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+  if (modal.style.display !== 'flex') return;
+
+  if (e.key === 'ArrowRight') {
+    slideIndex = (slideIndex + 1) % modalImageList.length;
+    updateModalImage();
+  } else if (e.key === 'ArrowLeft') {
+    slideIndex = (slideIndex - 1 + modalImageList.length) % modalImageList.length;
+    updateModalImage();
+  } else if (e.key === 'Escape') {
+    closeModal();
+  }
+  });
+  document.getElementById('modalPrev').addEventListener('click', () => {
+  slideIndex = (slideIndex - 1 + modalImageList.length) % modalImageList.length;
+  updateModalImage();
+  });
+  document.getElementById('modalNext').addEventListener('click', () => {
+    slideIndex = (slideIndex + 1) % modalImageList.length;
+    updateModalImage();
+  });
+  document.getElementById('modalClose').addEventListener('click', () => {
+    closeModal();
+  });
+
+
+  // ===== DOM References =====
+  const imgWrap = document.getElementById('modalImgWrap');
+  const pageIndicator = document.getElementById('modalPageIndicator');
+
+  // ===== State Variables =====
+  let zoomScale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+
+  // ====== Update Image Display ======
+  function updateModalImage() {
+    modalImg.src = modalImageList[slideIndex];
+    modalImg.alt = `Image ${slideIndex + 1}`;
+    pageIndicator.textContent = `Page ${slideIndex + 1} of ${modalImageList.length}`;
+    modalCap.textContent = imageData[modalIndex].caption; // ★여기를 적절히!
+    resetZoom();
+  }
+
+  // ====== Zoom & Pan Logic ======
+  function updateTransform() {
+    modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+  }
+
+  function resetZoom() {
+    zoomScale = 1;
+    translateX = 0;
+    translateY = 0;
+    updateTransform();
+  }
+
+  document.getElementById('zoomIn').addEventListener('click', () => {
+    zoomScale = Math.min(zoomScale + 0.1, 3);  // 최대 3배까지 확대
+    updateTransform();
+  });
+
+  document.getElementById('zoomOut').addEventListener('click', () => {
+    zoomScale = Math.max(zoomScale - 0.1, 0.5);  // 최소 0.5배까지 축소
+    updateTransform();
+  });
+
+
+  // ====== Wheel Zoom ======
+  modalImg.addEventListener('wheel', (e) => {
+    const zoomStep = 0.1;
+    const prevZoom = zoomScale;
+
+    if (e.deltaY > 0) {
+      zoomScale = Math.max(zoomScale - zoomStep, 0.5);
+    } else {
+      zoomScale = Math.min(zoomScale + zoomStep, 3);
+    }
+    // 포인터 기준 pan 보정
+    const imgRect = modalImg.getBoundingClientRect();
+    const cx = (e.clientX - imgRect.left) / imgRect.width;
+    const cy = (e.clientY - imgRect.top) / imgRect.height;
+    const scaleRatio = zoomScale / prevZoom;
+
+    translateX -= (cx * imgRect.width) * (scaleRatio - 1);
+    translateY -= (cy * imgRect.height) * (scaleRatio - 1);
+    
+    updateTransform();
+  });
+
+  // ====== Click + Drag Pan ======
+  imgWrap.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    imgWrap.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    updateTransform();
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    imgWrap.style.cursor = 'grab';
+  });
+
+
+  
+  /* ========================== 초기 호출 ========================== */
+  
+  window.addEventListener('DOMContentLoaded', () => {
+    renderGallery(imageData);
+  });
+
+  window.addEventListener('hashchange', () => {
+    handleHashRouting(); // URL 해시 변경될 때
+  });
+
+  function handleHashRouting() {
+    const match = location.hash.match(/^#\/(\d+)$/);
+    if (!match) return;
+    
+    const index = parseInt(match[1], 10) - 1;
+    const data = imageData[index];
+    if (!data) return;
+
+    const filenames = [];
+    for (let i = 0; i < data.imageCount; i++) {
+      const suffix = i === 0 ? '' : `_${i + 1}`;
+      const filename = data.filename.replace(/\.png$/, `${suffix}.png`);
+      filenames.push(filename);
+    }
+
+    openModal(filenames, data.caption, data.date, index);
+  }
+
+  document.getElementById('modalClose').addEventListener('click', () => {
+  closeModal();
+  window.location.hash = ''; // 홈으로 복귀
+  });
+
+
+  </script>
+</body>
+</html>
