@@ -25,7 +25,7 @@ const imageData = [
   filename: "slides/compressARC.png",
   imageCount: 2, 
   caption: "CompressARC performs progressive abstraction learning, evolving from copying surface-level patterns to extracting symbolic color-direction mappings—all within test-time training.",
-  keywords: ["ARC", "test-time optimization", "structure discovery", "pattern discovery"]
+  keywords: ["ARC", "test-time optimization", "pattern discovery"]
   }
 
   // ... more slides
