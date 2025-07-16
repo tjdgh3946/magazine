@@ -209,8 +209,9 @@
     }
 
     .page-indicator {
-      font-size: 0.95rem;
-      color: #888;
+      color: #ccc;
+      font-size: 0.85rem;
+      margin: 5px 0;
     }
 
     /* 오른쪽 metadata에는 caption만 남게 */
@@ -280,13 +281,15 @@
     }
 
     .modal-meta {
-      flex: 0 0 10%;
+      flex: 0 0 15%;
       width: 100%;
       overflow: hidden;
-      padding: 5px 1px;
+      padding: 1px 1px;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-top: -50px;
+      z-index: 12;
     }
 
     .modal-meta .caption {
@@ -303,6 +306,11 @@
 
     .zoom-controls {
       display: none !important;
+    }
+
+    .page-indicator {
+      font-size: 0.85rem;
+      margin-top: -50px;
     }
 
     .close {
@@ -337,11 +345,7 @@
 
     .nav.prev { left: 20px; }
     .nav.next { right: 20px; }
-    .page-indicator {
-      color: #ccc;
-      font-size: 0.85rem;
-      margin: 5px 0;
-    }
+
     /* ──────────────────── 사이드바 / 키워드 ──────────────────── */
     .container{display:flex;gap:30px;}
 
