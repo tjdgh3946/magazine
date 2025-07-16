@@ -1,0 +1,33 @@
+name: Slack Magazine Announcer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - metadata.js  # only run when metadata.js is changed
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Parse metadata.js
+        id: parse
+        run: |
+          last_line=$(tail -n 20 metadata.js | grep '{' | tail -n 1)
+          echo "LAST_LINE=$last_line" >> $GITHUB_ENV
+
+      - name: Extract index from metadata.js
+        id: count
+        run: |
+          total=$(grep -o '{' metadata.js | wc -l)
+          echo "SLIDE_INDEX=$((total))" >> $GITHUB_ENV
+
+      - name: Send to Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/#/${{ env.SLIDE_INDEX }}\"
+          }" $SLACK_WEBHOOK_URL
