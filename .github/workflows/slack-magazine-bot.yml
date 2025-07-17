@@ -13,22 +13,51 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Parse metadata.js
+      - name: Parse metadata.js and extract info
         id: parse
         run: |
-          last_line=$(tail -n 20 metadata.js | grep '{' | tail -n 1)
-          echo "LAST_LINE=$last_line" >> $GITHUB_ENV
+          # Get last object block
+          last_block=$(awk '/{/{f=1} f; /}/{f=0}' metadata.js | tail -n 20)
+          echo "$last_block" > latest_meta.txt
 
-      - name: Extract index from metadata.js
-        id: count
-        run: |
+          # Count number of { to get index
           total=$(grep -o '{' metadata.js | wc -l)
           echo "SLIDE_INDEX=$((total))" >> $GITHUB_ENV
+
+          # Extract multi-line message safely
+          message=$(awk '
+            BEGIN {found=0; msg=""}
+            /message:/ {
+              found=1
+              sub(/^.*message:[[:space:]]*"/, "")
+              if ($0 ~ /"[,]*[[:space:]]*$/) {
+                sub(/"[,]*[[:space:]]*$/, "")
+                msg = $0
+                found=0
+              } else {
+                msg = $0
+              }
+              next
+            }
+            found {
+              if ($0 ~ /"[,]*[[:space:]]*$/) {
+                sub(/"[,]*[[:space:]]*$/, "")
+                msg = msg "\n" $0
+                found=0
+              } else {
+                msg = msg "\n" $0
+              }
+            }
+            END {print msg}
+          ' latest_meta.txt)
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$message" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Slack
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data "{
-            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/#/${{ env.SLIDE_INDEX }}\"
+            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/#/${{ env.SLIDE_INDEX }}\\n💬 \\\"${{ env.MESSAGE }}\\\"\"
           }" $SLACK_WEBHOOK_URL

@@ -65,47 +65,7 @@
       position:relative;
       overflow:hidden;
       max-width:100%;
-    }
-
-    /* ──────────────────── 툴팁 (캡션·검색) ──────────────────── */
-    .search-icon {
-      font-size: 1.9rem;    /* 또는 원하는 값, 숫자 키울수록 커짐 */
-      width: 42px;          /* 또는 auto, line-height와 같이 조정 */
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* background: #eee;   // 원할 때 배경 추가 */
-      border-radius: 50%;   /* 원형, 선택사항 */
-      cursor: pointer;
-      /* padding 조절로 아이콘과 클릭영역 키울 수도 있음 */
-    }
-    .caption-text::after,
-    .search-icon::after{
-      content:attr(data-caption);
-      position:absolute;
-      bottom:125%;
-      left:50%;
-      transform:translateX(-50%);
-      background:#000;
-      color:#fff;
-      padding:6px 10px;
-      font-size:.75rem;
-      border-radius:6px;
-      white-space:nowrap;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .2s ease;
-      z-index:20;
-      box-shadow:0 2px 6px rgba(0,0,0,.3);
-      max-width:300px;
-    }
-    .search-icon::after{content:"Search by keyword";}
-    .search-icon:hover,
-    /* 툴팁 활성화는 아래처럼 */
-    .caption-text:hover::after,
-    .search-icon:hover::after {
-      opacity: 1;
+      text-align: left;
     }
 
     /* ──────────────────── 모달 ──────────────────── */
@@ -230,6 +190,7 @@
       font-size: 0.95rem;
       line-height: 1.4;
       color: #444;
+      text-align: left;
     }
 
     /* 필요하다면 .modal-meta의 나머지 요소 숨기기 */
@@ -301,7 +262,6 @@
       color: #444;
       white-space: pre-line;
       word-break: break-word;
-      text-align: center;
     }
 
     .zoom-controls {
@@ -450,22 +410,95 @@
     .menu {
       display: flex;
       flex-direction: column;  /* ✅ 수직 배열 */
-      gap: 10px;
+      gap: 8px;
       align-items: flex-end;   /* 오른쪽 정렬 */
     }
+    .menu-block {
+      position: relative; 
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 1rem;
+      font-weight: bold;
+      font-family: "Georgia", "Hiragino Kaku Gothic ProN", serif;
+    }
+    .menu-link {
+      color: white;
+      line-height: 1;
+      vertical-align: middle;
+      font-size: 1.4rem;
+      text-align: center; 
+    }
+
+    .menu-label {
+      position: absolute;
+      top: 50%;
+      right: 120%;
+      transform: translateY(-50%);
+      background: #222;
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      font-family: "Noto Sans JP", sans-serif;
+      z-index: 10;
+    }
+
+    .menu-label::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent transparent transparent #222;
+    }
+    .menu-block:hover .menu-label {
+      opacity: 1;
+    }
+    
     /* ──────────────────── 검색박스 ──────────────────── */
     .search-box{
-      position:absolute;top:40px;right:15px;z-index:10;
-      display:flex;align-items:center;gap:10px;
+      display: flex;
+      align-items: center;      /* 🔥 KEY PART */
+      transition: all 0.3s ease;
+    }
+    .search-icon {
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      vertical-align: middle;
     }
     .search-box input{
-      padding:8px 12px;font-size:1.15rem;border-radius:6px;border:1px solid #ccc;
-      box-shadow:0 2px 4px rgba(0,0,0,.1);
-      transition:width .3s ease,opacity .2s ease;
-      width:0;opacity:0;pointer-events:none;
+      padding: 6px 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      background: white;
+      color: black;
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: width 0.3s ease, opacity 0.2s ease;
+      font-family:'Georgia',serif;
     }
-    .search-box.active input{width:200px;opacity:1;pointer-events:all;}
 
+    /* show input on active */
+    .search-box.activate {
+      border: 1px solid black;
+    }
+    .search-box.active input {
+      width: 200px;
+      opacity: 1;
+      pointer-events: all;
+    }
     
     .zoom-controls {
       margin-bottom: 10px;
@@ -501,9 +534,19 @@
     <div class="main-content">  
     <!-- 🔍 검색 -->
     <div class="menu">
-      <div class="search-box" id="searchBox">
-        <span class="search-icon" id="searchIcon">🔎</span>
-        <input type="text" id="searchInput" placeholder="Search by keyword…" />
+      <div class="menu-block search-box" id="searchBox">
+        <span class="search-icon" id="searchIcon">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          🔎
+          <span class="menu-label">Search by keyword</span>
+        </span>
+      </div>
+    
+      <div class="menu-block">
+        <a href="notes/cookbook.pdf" target="_blank" class="menu-link">
+          <span class="menu-label">Cookbook</span>
+          🍳
+        </a>
       </div>
     </div>
       <section class="gallery" id="gallery"></section>
@@ -620,7 +663,7 @@
     // ✅ 클릭 시 전체 시리즈를 openModal에 전달
     img.addEventListener('click', () => {
 
-      modalIndex = list.indexOf(data);   
+      modalIndex = data.index;   
       const totalImages = data.imageCount; 
       const filenames = [];
 
@@ -629,7 +672,7 @@
         const filename = data.filename.replace(/\.png$/, `${suffix}.png`);
         filenames.push(filename);
       }
-
+      console.log(modalIndex); 
       window.location.hash = `#/${modalIndex + 1}`;
 
       openModal(filenames, data.caption, data.date, modalIndex);
@@ -670,7 +713,10 @@
   const keywordListDiv = document.querySelector('.sidebar .keywordList');
   const container = document.querySelector('.keywordScroller');
   const list = container.querySelector('.keywordList');
-  
+  imageData.forEach((item, idx) => {
+  item.index = idx;
+  });
+
   // 🔥 키워드 렌더링 + 이벤트 연결
   function renderKeywords() {
     list.innerHTML = "";
@@ -685,7 +731,6 @@
         btn.addEventListener('click', (e) => {
           e.stopPropagation();  // ✅ 중요
           const keyword = e.currentTarget.dataset.keyword;
-          filterByKeyword(keyword);
           filterByKeyword(k);
         });
 

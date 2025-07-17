@@ -1,0 +1,20 @@
+    caption: "Conditional expectation isn’t just a fancy average — it’s the L₂-minimizing oracle that projects truth onto the realm of the known.",
+    keywords: ["conditional expectation", "projection theorem", "best predictor"], 
+    message: "Conditional Expectation는 생각보다 어렵습니다"
+  },
+  {
+    date: "2025-07-08",
+    filename: "slides/FisherInformation.png",
+    imageCount: 1, 
+    caption: "Fisher information reflects the curvature of the log-likelihood, dictating the estimator’s variance via the Cramér–Rao bound. Sharper peaks imply more certainty, while flatter likelihoods signal low information and high uncertainty.",
+    keywords: ["fisher information", "log-likelihood", "cramer-rao bound", "estimator variance"], 
+    message: "Fisher Information 알고 있으면 좋지"
+  },
+  {
+    date: "2025-07-12",
+    filename: "slides/compressARC.png",
+    imageCount: 2, 
+    caption: "CompressARC performs progressive abstraction learning, evolving from copying surface-level patterns to extracting symbolic color-direction mappings—all within test-time training.",
+    keywords: ["ARC", "test-time optimization", "pattern discovery"],
+    message: "대충 읽었지만 정리함"
+  }, , 
