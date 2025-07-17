@@ -672,7 +672,7 @@
         const filename = data.filename.replace(/\.png$/, `${suffix}.png`);
         filenames.push(filename);
       }
-      console.log(modalIndex); 
+      //console.log(modalIndex); 
       window.location.hash = `#/${modalIndex + 1}`;
 
       openModal(filenames, data.caption, data.date, modalIndex);
@@ -940,7 +940,9 @@
     if (!match) return;
     
     const index = parseInt(match[1], 10) - 1;
+    modalIndex = index; 
     const data = imageData[index];
+
     if (!data) return;
 
     const filenames = [];
