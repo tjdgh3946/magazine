@@ -94,18 +94,18 @@
     }
 
     .modal-content.side-by-side {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    max-width: 90vw;
-    max-height: 90vh;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      max-width: 90vw;
+      max-height: 90vh;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
     }
 
     .modalImgWrap {
@@ -150,28 +150,40 @@
       pointer-events: auto;
     }
 
-    /* 하단 컨트롤 영역 */
-    .image-controls {
-      width: 100%;
-      padding-top: 10px;
-      padding-bottom: 6px;
-      background: #fff; /* 필요하다면 */
+    .pagination-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2;
+      gap: 10px;
+      z-index: 10; /* ensure it floats above the image */
+      pointer-events: auto; 
     }
 
-    .zoom-controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 3px;
+    .pagination-dots  .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #888;
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+      caret-color: transparent;  /* 🧠 Hides the blinking cursor */
+      outline: none;             /* 🧠 Removes blue outline on focus */
+      cursor: pointer;
+      pointer-events: auto;
+      tabindex: -1;
     }
 
-    .page-indicator {
-      color: #ccc;
-      font-size: 0.85rem;
-      margin: 5px 0;
+    .pagination-dots .dot.active {
+      opacity: 1;
+      background-color: #24527e; /* Futuristic blue */
+      box-shadow: 0 0 8px #24527e;
+    }
+
+    .dot:hover {
+      opacity: 0.7;
+      cursor: pointer;
     }
 
     /* 오른쪽 metadata에는 caption만 남게 */
@@ -200,88 +212,88 @@
     }
 
     @media (max-width: 1050px), (hover: none) and (pointer: coarse) {
-    .modal {
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+      .modal {
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
 
-    .modal-content.side-by-side {
-      display: flex;
-      flex-direction: column;
-      height: 90vh; /* 전체 모달 높이 */
-      overflow: hidden;
-    }
+      .modal-content.side-by-side {
+        display: flex;
+        flex-direction: column;
+        height: 90vh; /* 전체 모달 높이 */
+        overflow: hidden;
+      }
 
-    .modalImgWrap {
-      flex: 1 1 auto; /* 90% for image, 10% for caption */
-      width: 100%;
-      max-width: 90vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: auto; 
-    }
+      .modalImgWrap {
+        flex: 1 1 auto; /* 90% for image, 10% for caption */
+        width: 100%;
+        max-width: 90vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto; 
+      }
 
-    .modalImgArea {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      .modalImgArea {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .modalImgArea img {
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
+      .modalImgArea img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
 
-    .modal-meta {
-      flex: 0 0 15%;
-      width: 100%;
-      overflow: hidden;
-      padding: 1px 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: -25px;
-      z-index: 12;
-    }
+      .modal-meta {
+        flex: 0 0 15%;
+        width: 100%;
+        overflow: hidden;
+        padding: 1px 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -25px;
+        z-index: 12;
+      }
 
-    .modal-meta .caption {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      font-size: 0.98rem;
-      line-height: 1.5;
-      color: #444;
-      white-space: pre-line;
-      word-break: break-word;
-    }
+      .modal-meta .caption {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        font-size: 0.98rem;
+        line-height: 1.5;
+        color: #444;
+        white-space: pre-line;
+        word-break: break-word;
+      }
 
-    .zoom-controls {
-      display: none !important;
-    }
+      .zoom-controls {
+        display: none !important;
+      }
 
-    .page-indicator {
-      font-size: 0.85rem;
-      margin-top: -25px;
-    }
+      .page-indicator {
+        font-size: 0.85rem;
+        margin-top: -25px;
+      }
 
-    .close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 2rem;
-      color: #fff;
-      cursor: pointer;
-      z-index: 10;
-    }
+      .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+      }
     }
 
     .close{
@@ -425,14 +437,25 @@
       font-weight: bold;
       font-family: "Georgia", "Hiragino Kaku Gothic ProN", serif;
     }
-    .menu-link {
+    .menu-link{
       color: white;
       line-height: 1;
       vertical-align: middle;
       font-size: 1.8rem;
       text-align: center; 
     }
-
+    .refresh-button{
+      font: inherit;
+      line-height: 1;
+      vertical-align: middle;
+      font-size: 1.8rem;
+      text-align: center;
+      background: none;
+      cursor: pointer;
+      border: none; 
+      padding: 0;
+      outline: none; 
+    }
     .menu-label {
       position: absolute;
       top: 50%;
@@ -548,6 +571,13 @@
           🍳
         </a>
       </div>
+
+      <div class="menu-block">
+        <button type="button" class="refresh-button" id="refreshBtn">
+          <span class="menu-label">Refresh</span>
+          🔄
+        </button>
+      </div>
     </div>
       <section class="gallery" id="gallery"></section>
     </div>
@@ -562,13 +592,7 @@
     <div class="modalImgWrap" id="modalImgWrap">
       <div class="modalImgArea">
         <img id="modalImage" alt="Slide" />
-      </div>
-      <div class="image-controls">
-        <div class="zoom-controls">
-          <button id="zoomIn">＋</button>
-          <button id="zoomOut">−</button>
-        </div>
-        <div class="page-indicator" id="modalPageIndicator"></div>
+        <div class="pagination-dots" id="modalPageIndicator"></div>
       </div>
     </div>
   
@@ -835,6 +859,12 @@
     closeModal();
   });
 
+  // 새로고침 
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    document.querySelectorAll('.keyword').forEach(el => el.classList.remove('active'));
+    renderGallery(imageData); 
+  });
+
 
   // ===== DOM References =====
   const imgWrap = document.getElementById('modalImgWrap');
@@ -850,11 +880,26 @@
 
 
   // ====== Update Image Display ======
+  function updatePageIndicator() {
+    pageIndicator.innerHTML = ''; // Clear previous dots
+    for (let i = 0; i < modalImageList.length; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === slideIndex) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        slideIndex = i;
+        updateModalImage();
+      });
+      pageIndicator.appendChild(dot);
+    } 
+  }
+
   function updateModalImage() {
     modalImg.src = modalImageList[slideIndex];
     modalImg.alt = `Image ${slideIndex + 1}`;
     pageIndicator.textContent = `Page ${slideIndex + 1} of ${modalImageList.length}`;
-    modalCap.textContent = imageData[modalIndex].caption; // ★여기를 적절히!
+    modalCap.textContent = imageData[modalIndex].caption; 
+    updatePageIndicator(); 
     resetZoom();
   }
 
@@ -870,17 +915,7 @@
     updateTransform();
   }
 
-  document.getElementById('zoomIn').addEventListener('click', () => {
-    zoomScale = Math.min(zoomScale + 0.1, 3);  // 최대 3배까지 확대
-    updateTransform();
-  });
-
-  document.getElementById('zoomOut').addEventListener('click', () => {
-    zoomScale = Math.max(zoomScale - 0.1, 0.5);  // 최소 0.5배까지 축소
-    updateTransform();
-  });
-
-
+  
   // ====== Wheel Zoom ======
   modalImg.addEventListener('wheel', (e) => {
     const zoomStep = 0.1;
@@ -954,6 +989,8 @@
 
     openModal(filenames, data.caption, data.date, index);
   }
+
+  
 
   document.getElementById('modalClose').addEventListener('click', () => {
   closeModal();
