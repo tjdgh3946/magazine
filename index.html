@@ -39,6 +39,8 @@
       border-radius:20px;
       overflow:hidden;
       padding-bottom:15px;
+      caret-color: transparent;  /* 🧠 Hides the blinking cursor */
+      outline: none;             /* 🧠 Removes blue outline on focus */
     }
     .card img{
       width:100%;
@@ -201,7 +203,7 @@
     }
 
     .modal-meta .caption {
-      font-size: 0.95rem;
+      font-size: 1.00rem;
       line-height: 1.4;
       color: #444;
       text-align: left;
@@ -211,91 +213,6 @@
     .modal-meta .zoom-controls,
     .modal-meta .page-indicator {
       display: none;
-    }
-
-    @media (max-width: 1050px), (hover: none) and (pointer: coarse) {
-      .modal {
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-
-      .modal-content.side-by-side {
-        display: flex;
-        flex-direction: column;
-        height: 90vh; /* 전체 모달 높이 */
-        overflow: hidden;
-      }
-
-      .modalImgWrap {
-        flex: 1 1 auto; /* 90% for image, 10% for caption */
-        width: 100%;
-        max-width: 90vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: auto; 
-      }
-
-      .modalImgArea {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .modalImgArea img {
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: block;
-        margin: 0 auto;
-        box-sizing: border-box;
-      }
-
-      .modal-meta {
-        flex: 0 0 15%;
-        width: 100%;
-        overflow: hidden;
-        padding: 1px 1px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: -25px;
-        z-index: 12;
-      }
-
-      .modal-meta .caption {
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-        font-size: 0.98rem;
-        line-height: 1.5;
-        color: #444;
-        white-space: pre-line;
-        word-break: break-word;
-      }
-
-      .zoom-controls {
-        display: none !important;
-      }
-
-      .page-indicator {
-        font-size: 0.85rem;
-        margin-top: -25px;
-      }
-
-      .close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 2rem;
-        color: #fff;
-        cursor: pointer;
-        z-index: 10;
-      }
     }
 
     .close{
@@ -394,6 +311,9 @@
       border: 1px solid #dde3ed;
       box-shadow: 0 1px 2px #0002;
       transition: background 0.2s, color 0.2s;
+      white-space: normal;       /* allow wrapping */
+      word-break: break-word;   /* break long words when needed */
+      max-width: 100%;           /* don’t overflow */
     }
     .keyword:hover {
       background: #dde6f8;
@@ -424,13 +344,12 @@
 
     .menu {
       position: fixed;
-      top: 80px;
+      top: 95px;
       right: 10px;
       display: flex;
       flex-direction: column;  /* ✅ 수직 배열 */
       gap: 8px;
       align-items: flex-end;   /* 오른쪽 정렬 */
-      z-index: 999;
     }
     .menu-block {
       position: relative; 
@@ -548,6 +467,92 @@
     .zoom-controls button:hover {
       background: #ddd;
     }
+
+    @media (max-width: 1050px), (hover: none) and (pointer: coarse) {
+        .modal {
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+        }
+
+        .modal-content.side-by-side {
+          display: flex;
+          flex-direction: column;
+          height: 90vh; /* 전체 모달 높이 */
+          overflow: hidden;
+        }
+
+        .modalImgWrap {
+          flex: 1 1 auto; /* 90% for image, 10% for caption */
+          width: 100%;
+          max-width: 90vw;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: auto; 
+        }
+
+        .modalImgArea {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .modalImgArea img {
+          width: 100%;
+          height: auto;
+          max-width: 100%;
+          object-fit: contain;
+          display: block;
+          margin: 0 auto;
+          box-sizing: border-box;
+        }
+
+        .modal-meta {
+          flex: 0 0 15%;
+          width: 100%;
+          overflow: hidden;
+          padding: 1px 1px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: -25px;
+          z-index: 12;
+        }
+
+        .modal-meta .caption {
+          width: 100%;
+          height: 100%;
+          overflow-y: auto;
+          font-size: 0.98rem;
+          line-height: 1.5;
+          color: #444;
+          white-space: pre-line;
+          word-break: break-word;
+        }
+
+        .zoom-controls {
+          display: none !important;
+        }
+
+        .page-indicator {
+          font-size: 0.85rem;
+          margin-top: -25px;
+        }
+
+        .close {
+          position: absolute;
+          top: 20px;
+          right: 30px;
+          font-size: 2rem;
+          color: #fff;
+          cursor: pointer;
+          z-index: 10;
+        }
+      }
+
   </style>
 </head>
 <body>
