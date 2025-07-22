@@ -86,7 +86,9 @@
       max-height: 90vh;
       overflow: hidden; /* ✅ 이미지가 넘치지 않도록 */
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+      border: 1px solid #eaeaea;
+      border-radius: 10px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -415,15 +417,20 @@
     .main-content {
       flex: 1;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      align-items: flex-start;
       gap: 12px;
     }
 
     .menu {
+      position: fixed;
+      top: 80px;
+      right: 10px;
       display: flex;
       flex-direction: column;  /* ✅ 수직 배열 */
       gap: 8px;
       align-items: flex-end;   /* 오른쪽 정렬 */
+      z-index: 999;
     }
     .menu-block {
       position: relative; 
@@ -555,7 +562,6 @@
       </div>
     </aside>
     <div class="main-content">  
-    <!-- 🔍 검색 -->
     <div class="menu">
       <div class="menu-block search-box" id="searchBox">
         <span class="search-icon" id="searchIcon">
@@ -580,7 +586,7 @@
       </div>
     </div>
       <section class="gallery" id="gallery"></section>
-    </div>
+  </div>
   </div>
 
 <!-- 모달 뷰어 -->
