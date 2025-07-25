@@ -38,5 +38,13 @@ const imageData = [
     caption: "랜덤변수 moment genearting function 왜 씀? 1. mean,variance 계산하기 더 쉬움. 2. 랜덤 변수 2개 더해서 나온 랜덤 변수 distribution 직번 구하지 않고도 여러가지 결과 만들 수 있음",
     keywords: ["probability", "mgf"],
     message: "랜덤변수 moment genearting function 왜 씀?"
-  } 
+  },
+  {
+    date: "2025-07-25",
+    filename: "slides/greedyKCenter.png",
+    imageCount: 1, 
+    caption: "슬곧내 (슬라이드 내용이 곧 내용)",
+    keywords: ["approximate", "greedy", "coreset"],
+    message: "Greedy K-center- k개의 coreset 찾는 단순한 알고리즘"
+  }  
 ];
