@@ -27,10 +27,11 @@
 
     /* ──────────────────── 갤러리 / 카드 ──────────────────── */
     .gallery{
+      flex: 1 1 90%; 
       display:flex;
       flex-wrap:wrap;
       gap:20px;
-      justify-content:left;
+      justify-content:center;
     }
     .card{
       width:260px;
@@ -79,6 +80,7 @@
       background:rgba(0,0,0,.6);
       justify-content:center;
       align-items:center;
+      background-image: url("slides/background.jpg");
     }
     .modal-content {
       background: #fff;
@@ -220,6 +222,7 @@
       top:20px;right:30px;
       font-size:2rem;
       color:#fff;
+      background-color: #666;
       cursor:pointer;
     }
     .nav {
@@ -339,16 +342,15 @@
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      gap: 12px;
+      gap: 6px;
     }
 
     .menu {
-      position: fixed;
-      top: 95px;
-      right: 10px;
+      flex: 0 0 10%;
+      position: relative; 
       display: flex;
-      flex-direction: column;  /* ✅ 수직 배열 */
-      gap: 8px;
+      flex-direction: column;
+      gap: 2px;
       align-items: flex-end;   /* 오른쪽 정렬 */
     }
     .menu-block {
@@ -567,13 +569,11 @@
       </div>
     </aside>
     <div class="main-content">  
+    <div class="gallery" id="gallery"></div>
     <div class="menu">
       <div class="menu-block search-box" id="searchBox">
-        <span class="search-icon" id="searchIcon">
-          <input type="text" id="searchInput" placeholder="Search by keyword…" />
-          🔎
-          <span class="menu-label">Search by keyword</span>
-        </span>
+        <input type="text" id="searchInput" placeholder="Search by keyword…" />
+        <span class="search-icon" id="searchIcon">🔍</span>
       </div>
     
       <div class="menu-block">
@@ -590,7 +590,6 @@
         </button>
       </div>
     </div>
-      <section class="gallery" id="gallery"></section>
   </div>
   </div>
 
@@ -686,7 +685,7 @@
   /* ========================== 갤러리 렌더 ========================== */
   function renderGallery(list) {
   gallery.innerHTML = '';
-  list.forEach(data => {
+  list.slice().reverse().forEach(data => {
     const card = document.createElement('div');
     card.className = 'card';
 
@@ -748,6 +747,7 @@
   const keywordListDiv = document.querySelector('.sidebar .keywordList');
   const container = document.querySelector('.keywordScroller');
   const list = container.querySelector('.keywordList');
+
   imageData.forEach((item, idx) => {
   item.index = idx;
   });
@@ -876,6 +876,35 @@
     renderGallery(imageData); 
   });
 
+  // swipe 
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  const swipeArea = document.getElementById('modalImgWrap');
+  swipeArea.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, false);
+
+  swipeArea.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, false);
+
+  function handleSwipe() {
+    const diff = touchStartX - touchEndX;
+
+    if (Math.abs(diff) > 30) { // swipe threshold
+      if (diff > 0) {
+        // LEFT swipe → next image
+        slideIndex = (slideIndex + 1) % modalImageList.length;
+        updateModalImage();
+      } else {
+        // RIGHT swipe → previous image
+        slideIndex = (slideIndex - 1 + modalImageList.length) % modalImageList.length;
+        updateModalImage();
+      }
+    }
+  }
 
   // ===== DOM References =====
   const imgWrap = document.getElementById('modalImgWrap');
