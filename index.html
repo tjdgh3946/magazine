@@ -36,8 +36,11 @@
     .card{
       width:260px;
       background:#fff;
-      box-shadow:0 4px 10px rgba(0,0,0,.1);
-      border-radius:20px;
+      box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.7);
+      border-color: black; 
+      border-radius: 1.375em;
+      border-width: 1px; 
+      border-style: solid;
       overflow:hidden;
       padding-bottom:15px;
       caret-color: transparent;  /* 🧠 Hides the blinking cursor */
@@ -50,9 +53,8 @@
       border-radius:20px 20px 0 0;
       cursor:pointer;
     }
-
     .card:hover {
-      box-shadow: 0 12px 32px rgba(0,0,0,0.21), 0 1.5px 6px rgba(0,0,0,.10);
+      box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.7);
       /* 위로 살짝 띄우기 */
       transform: translateY(-12px) scale(1.03);
       z-index: 2;
@@ -90,7 +92,6 @@
       max-height: 90vh;
       overflow: hidden; /* ✅ 이미지가 넘치지 않도록 */
       text-align: center;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
       border: 1px solid #eaeaea;
       border-radius: 10px;
       display: flex;
@@ -110,7 +111,10 @@
       padding: 20px;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border-width: 1px; 
+      border-style: solid; 
+      border-color: #aaaaaa;
+      box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.7);
       overflow: hidden;
     }
 
@@ -226,17 +230,29 @@
       cursor:pointer;
     }
     .nav {
-    position: absolute;
-    top: 50%;
-    background: none;
-    border: none;
-    font-size: 2.5rem;
-    color: rgb(212, 212, 212);
-    cursor: pointer;
-    user-select: none;
-    transform: translateY(-50%);
+      position: absolute;
+      top: 50%;
+      background: none;
+      transform: translate(-50%, -50%); /* Center the circle */
+      background-color: #fff;
+      border-radius: 50%;  /* Makes the div circular */
+      width: 60px;  /* Size of the circle */
+      height: 60px;
+      border: 3px solid transparent; /* Default border (hidden) */
+      justify-content: center;
+      align-items: center;  /* Center the arrow inside */
+      font-size: 2.5rem;
+      color:#666;
+      cursor: pointer;
+      user-select: none;
+      transform: translateY(-50%);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease; /* Smooth transition for border */
     }
 
+    .nav:hover {
+      opacity: 1; 
+    }
     .nav.prev { left: 20px; }
     .nav.next { right: 20px; }
 
@@ -543,7 +559,9 @@
           font-size: 0.85rem;
           margin-top: -25px;
         }
-
+        .nav{
+          opacity: 0; 
+        }
         .close {
           position: absolute;
           top: 20px;
@@ -876,35 +894,6 @@
     renderGallery(imageData); 
   });
 
-  // swipe 
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  const swipeArea = document.getElementById('modalImgWrap');
-  swipeArea.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, false);
-
-  swipeArea.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  }, false);
-
-  function handleSwipe() {
-    const diff = touchStartX - touchEndX;
-
-    if (Math.abs(diff) > 30) { // swipe threshold
-      if (diff > 0) {
-        // LEFT swipe → next image
-        slideIndex = (slideIndex + 1) % modalImageList.length;
-        updateModalImage();
-      } else {
-        // RIGHT swipe → previous image
-        slideIndex = (slideIndex - 1 + modalImageList.length) % modalImageList.length;
-        updateModalImage();
-      }
-    }
-  }
 
   // ===== DOM References =====
   const imgWrap = document.getElementById('modalImgWrap');
