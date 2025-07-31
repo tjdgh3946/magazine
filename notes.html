@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NOTES</title>
+  <style>
+    
+    h1{
+      font-family:'Georgia',serif;
+      font-size:2.0rem;
+      color:#000;
+      letter-spacing:2px;
+      margin-bottom:1em;
+      text-shadow:2px 2px 5px rgba(0,0,0,.2);
+    }
+    body {
+      font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP", sans-serif;
+      background: linear-gradient(
+        180deg,
+        #ffffff 70%,
+        rgba(200, 200, 200, 0.15) 100%
+      );
+      padding: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 0.8em 1em;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #222;
+      color: #fff;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    a {
+      text-decoration: none;
+      color: #007acc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5em;">
+  <div style="display: flex; align-items: center;">
+    <h1>📚 NOTES</h1>
+  </div>
+  <a href="index.html" style="
+    background: #222;
+    color: white;
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: background 0.2s ease;
+  " onmouseover="this.style.background='#444'" onmouseout="this.style.background='#222'">
+    📰 MAGAZINE
+  </a>
+</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>PDF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Analysis</td><td><a href="notes/analysis.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Convexity</td><td><a href="notes/convexity.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Fundamental algebra</td><td><a href="notes/fundamental_algebra.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Integration tricks</td><td><a href="notes/integrationTricks.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Linear algebra</td><td><a href="notes/linear_algebra.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Privacy</td><td><a href="notes/privacy.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Probability & Statistics</td><td><a href="notes/prob_stats.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Random variable control</td><td><a href="notes/rvControl.pdf" target="_blank">📄 Open</a></td></tr>
+      <tr><td>Stochastic process</td><td><a href="notes/stochastic_process.pdf" target="_blank">📄 Open</a></td></tr>
+    </tbody>
+  </table>
+
+</body>
+</html>

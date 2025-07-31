@@ -1,0 +1,5 @@
+# GODDAMN LATEX BUILD STUFF
+latex/
+
+# GINZA OPS SCRIPTS (local only)
+*.sh
