@@ -3,3 +3,6 @@ latex/
 
 # GINZA OPS SCRIPTS (local only)
 *.sh
+
+# GODDAMN matplotlib playgroound 
+graphics/

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>〈Saint Laurent〉洗練と反骨のはざま</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  <div class="wrap">
+    <!-- 왼쪽 사이드바 -->
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>📑 Conditional Expectation</h1>
+        <p class="dek">Some facts about the conditional expecation.</p>
+        <div class="date">08 Aug 2025</div>
+      </section>
+
+      <article class="body">
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+        <h3>1. It is a $L_2$-minimizer</h3> 
+        \[
+          \mathbb{E}[Y|X] = \arg \min_{g(X)} \mathbb{E} [ (Y- g(X))^2]
+        \]
+        $\implies$ Conditional expecation is the best predictor of $Y$ given $X$ in $L_2$ sense. 
+        
+        <br> 
+
+        <h3>2. Projection theorem</h3> 
+        \[
+          \mathbb{E}[ (Y - \mathbb{E}[Y | X]) \cdot g(X)] = 0 \quad \forall g
+        \]
+        $\implies$ $Y - \mathbb{E}[Y | X]$ is orthogonal to all $g(X)$ 
+        <div class="ginzabox">
+        <div class="ginzabox-title">
+        Example               
+        </div> 
+        Find optimal $f$ such that  
+        \begin{equation}
+        \min_{f \; \text{measurable}}
+        \mathbb{E}_{X,Y} \left[ | f(X+ aY) - Y|^2\right]
+        \label{eq:1}
+        \end{equation}
+
+        \begin{equation}
+        f^*(z) = \frac{z - \mathbb{E}[X \mid Z=z]}{a}
+        \label{eq:sol}
+        \end{equation}
+        </div>
+      </article>
+      <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+    </div>
+    </aside>
+  </div>
+</body>
+</html>

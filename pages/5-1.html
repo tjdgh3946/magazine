@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Greedy K</h1>
+        <p class="dek"></p>
+        <div class="date">08 Aug 2025</div>
+      </section>
+
+      <article class="body">
+
+      <h3>Goal</h3>
+        <p>
+          This problem aims to select <em>k</em> cluster centers from a given set of points such that the
+          <span style="color: rgb(34, 34, 187);">maximum distance of any point to its closest center</span> is minimized.
+        </p>
+        <p>
+          Minimize:
+          $$\max_{v \in V} \min_{c \in C} d(v, c)$$
+        </p>
+
+        <h3>Algorithm</h3>
+        <ol>
+          <li>임의의 한 점을 첫 번째 중심으로 선택</li>
+          <li>
+            이후에는 "가장 먼 점"—즉, 현재 선택된 중심들과의 거리 중 가장 큰 값을 갖는 점—을 새로운 중심으로 반복해서 선택
+          </li>
+          <li>총 <em>k</em>개의 중심이 선택될 때까지 반복</li>
+        </ol>
+        <div class="figure-wrap">
+          <img src="figures/greedyK.PNG" alt="Greedy k-center example" style="max-width: 100%;">
+        </div>
+
+        <h3>Guarantee: 2-Approximation</h3>
+        <p>
+          Greedy로 선택된 <em>k</em>개의 중심으로 구성된 해의 최대 거리 <em>r</em>은 최적 해의 최대 거리의 최대 2배이다.
+        </p>
+        <p>
+          $$r \le 2 r^{\ast}$$
+        </p>
+
+        <h3>Complexity</h3>
+        
+        $\mathcal{O}(nkd)$ for $n$ points $\mathbb{R}^d$.
+      <footer class="tag-footer">
+        <div id="tagTrack"></div>
+      </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+    </div>
+    </aside>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+    <div class="wrap">
+    <!-- 왼쪽 사이드바 -->
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Fisher Information</h1>
+        <p class="dek"></p>
+        <div class="date">08 Aug 2025</div>
+      </section>
+      <article class="body">
+      
+      <h3>Definition</h3>
+      \begin{equation}
+      \mathcal{I}(\theta) = - \mathbb{E} \left[\frac{\partial^2}{\partial \theta} \log p_{\theta} (x)\right],
+      \end{equation}
+      where $\log p_{\theta} (x)$ is the $score$ of the distribution $p$. 
+      <h3>Visualization</h3>
+      <div class="figure-wrap">
+        <img src="figures/Fisher_information.png" alt="Fisher Information">
+      </div>
+      Taylor 2nd order with $l^\prime (\hat{\theta}_{\text{MLE}}) = 0$: 
+      \[
+      l_x (\theta) \approx l_x(\hat{\theta}_{\text{MLE}}) + \frac{1}{2} (\theta-\hat{\theta}_{\text{MLE}})^2 l_{\text{MLE}}^{\prime \prime} (\hat{\theta}_{\text{MLE}})
+      \]
+      $\implies$ $l_x(\theta) \approx l_x(\hat{\theta}_{\text{MLE}}) - \frac{1}{2} (\theta - \hat{\theta}_{\text{MLE}})^2 I (\hat{\mathcal{\theta}}_{\text{MLE}})$
+
+      <h3>Cramer-Rao Bound</h3>
+      \[
+        \underbrace{\text{Var}[\hat{\theta}]}_{\text{Estimator Variance} }\geq \frac{1}{\mathcal{I}(\theta)} 
+      \]
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+    </div>
+    </aside>
+  </div>
+</body>
+
+</html>

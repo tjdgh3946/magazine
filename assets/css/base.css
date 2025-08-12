@@ -1,0 +1,52 @@
+/* ===== Reset (아주 얕게) ===== */
+*,*::before,*::after{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{ margin:0; color:var(--ink); background: #fff; }
+
+/* ===== Global Variables ===== */
+:root {
+  /* 기존 전역 변수들 */
+  --ink: #000000;
+  --muted: #666;
+  --card: #fff;
+  --border: #000;
+  --soft: #eee;
+  --shadow: 6px 6px 0 rgba(0,0,0,.35);
+  --radius: 18px;
+  --maxw: 980px;
+
+  /* 사이드바 크기/간격 */
+  --l-rail-w: 220px;
+  --l-rail-gap: 14px;
+  --r-rail-w: 50px;
+  --r-rail-gap: 14px;
+
+  /* 전역 폰트 변수 */
+  --font-sans: "Helvetica Neue", helvetica, "Noto Sans KR", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Noto Serif KR", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", ui-serif, georgia, cambria, "Times New Roman", times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: var(--font-serif);
+  margin:0;
+  font-size: 18px;
+  background: #fff;
+  color:var(--ink);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{ --card:#111; --ink:#eaeaea; --border:#eaeaea; --muted:#b9b9b9; }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+}

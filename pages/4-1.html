@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>MGF 왜 씀?</h1>
+        <p class="dek">Short Answer: 꼭 서야 하는 건 아닌데 쓰면 편함.</p>
+        <div class="date">08 Aug 2025</div>
+      </section>
+
+      <article class="body">
+
+      <h3>Definition (MGF)</h3>
+      <p>
+        The moment generating function of a random variable <em>X</em> is
+      </p>
+      <p>
+        $$M_X(t)=\mathbb{E}\!\left[e^{tX}\right]=
+        \begin{cases}
+          \displaystyle \sum_{x} e^{t x}\, f_X(x) & \text{if } X \text{ has a pmf},\\[6pt]
+          \displaystyle \int_{-\infty}^{\infty} e^{t x}\, f_X(x)\, dx & \text{if } X \text{ has a pdf}.
+        \end{cases}$$
+      </p>
+
+      <h3>1. Computing moments (mean, variance, etc.) is much easier with MGF</h3>
+      <p>
+        To compute a moment using a PDF/PMF, you often need an integral or an infinite sum.
+        With the MGF you only need derivatives.
+      </p>
+      <p>
+        Example: If \(X\) is Poisson with mean \(\lambda\), then
+        $$M_X(t)=\exp\!\big(\lambda\,(e^{t}-1)\big).$$
+        The mean is \(M_X'(0)\), the second moment is \(M_X''(0)\), and so on.
+      </p>
+
+      <h3>2. Finding the PDF of a sum of random variables can be easier</h3>
+      <p>
+        Finding the PDF of \(Z=X+Y\) is sometimes easier if you know the MGF (or characteristic function),
+        since for independent variables you can multiply MGFs:
+      </p>
+      <p>
+        $$M_Z(t)=M_X(t)\,M_Y(t).$$
+      </p>
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+    </div>
+    </aside>
+  </div>
+</body>
+
+</html>

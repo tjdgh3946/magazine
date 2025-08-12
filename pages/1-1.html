@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Change of Variable</h1>
+        <p class="dek"></p>
+        <div class="date">08 Aug 2025</div>
+      </section>
+
+      <article class="body">
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+      <h3>1. Change of Variable for <span class='alert'>Density</span></h3>
+      \begin{equation}
+      p(\mathbf{x}) = \pi (f^{-1} (\mathbf{x})) \cdot \left|\frac{\partial f^{-1}}{\partial \mathbf{x}} \right|
+      \end{equation}
+      for one-to-one $f$. 
+      
+      <h3>2. Change of Variable for <span class="alert">Distribution</span></h3>
+      \begin{equation}
+      \int_{f (\mathcal{Z})} g(x) d \mathbf{x} = \int_{\mathcal{Z}} g( f(\mathbf{z})) \left|\frac{\partial \mathbf{x}}{\partial \mathbf{z}} \right| d \mathbf{z}
+      \end{equation}
+
+      <div class="ginzabox">
+      <div class="ginzabox-title">
+        Example: Entropy Calculation
+      </div>  
+      \begin{equation}
+      H[\mathbf{y}] = - \int p_{\mathbf{y}} (y) \log p_{\mathbf{y}} (y) dy 
+      \end{equation}
+      Now, under the linear transformation $y=Ax$ 
+      \begin{equation}
+      H[\mathbf{y}] = - \int \left(\frac{p_{\mathbf{x} (x)}}{\text{det} (A)}\right)  \log \left( \frac{p_{\mathbf{x}}(x)}{\text{det} (A)}\right) \left|\frac{\partial y}{\partial x} \right| dx 
+      \end{equation}
+      $\implies$ $H[\mathbf{y}] = H[\mathbf{x}] + \log \text{det}(A)$<br>  
+      Therefore in the case that $X$ is continuous, then the differential entropy of Y is $not$ the same as the differential entropy of $X$.
+      </div>
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+    </div>
+    </aside>
+</body>
+
+</html>
