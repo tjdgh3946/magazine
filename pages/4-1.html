@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/layout.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
 
   <script src="../assets/js/mathjax-config.js"></script>
 
@@ -121,6 +122,17 @@
             <span class="menu-label">Refresh</span>
             🔄
           </button>
+        </div>
+                <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
         </div>
     </div>
     </aside>

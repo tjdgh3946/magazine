@@ -1,0 +1,114 @@
+/* 사이드 TOC */
+nav[aria-label="Table of contents"] {
+  position: sticky;
+  top: 16px;
+  height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 16px;
+  border: none;
+  border-radius: 1.385rem;
+  background: #ffffff;
+}
+
+nav .toc-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  padding-left: 1px;
+  padding-bottom: 4px;
+  color: black; 
+  border-bottom: 1px solid #000000;
+}
+
+/* 래퍼 */
+.toc-hover {
+  position: relative;
+  display: inline-block;
+  z-index: 1000; /* 패널이 위에 뜨도록 */
+}
+
+/* 아이콘 버튼 */
+.toc-icon {
+  position: absolute;
+  top: 0;
+  right: 0;            /* LTR/RTL 모두 배려하려면 inset-inline-end: 0; 사용 가능 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* 패널 기본: 숨김 */
+.toc-panel {
+  position: absolute;
+  top: 42px;        /* 아이콘 아래로 */
+  left: auto; 
+  right: 0; 
+  min-width: 240px;
+  max-height: 30vh;
+  overflow: auto;
+  background: #fff;
+  border: none; 
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 1;
+}
+
+/* 말풍선 꼬리 */
+.toc-panel::before {
+  content: "";
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 14px; height: 14px;
+  background: #fff;
+  border-left: 1px solid #cfcfcf;
+  border-top: 1px solid #cfcfcf;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* 보이기 상태 */
+.toc-hover:hover .toc-panel,
+.toc-hover.open .toc-panel{
+  opacity: 1;
+  pointer-events: auto;
+  margin-right: 40px;
+}
+
+
+/* 기본 */
+.toc { list-style: none; padding-left: 0; margin: 0;}
+.toc li { margin: 4px 0; }
+
+/* 레벨별 들여쓰기 */
+.toc li.lvl-1 { padding-left: 0;   font-weight: 700; font-size: 16px; list-style-type: none; }
+.toc li.lvl-2 { padding-left: 12px; font-weight: 600; font-size: 15px; list-style-type: disc; }
+.toc li.lvl-3 { padding-left: 24px; font-weight: 500; font-size: 14px; list-style-type: circle; }
+.toc li.lvl-4 { padding-left: 36px; font-size: 13px; list-style-type: "–  "; }
+.toc li.lvl-5 { padding-left: 48px; font-size: 12px; opacity: .9; }
+.toc li.lvl-6 { padding-left: 60px; font-size: 12px; opacity: .8; }
+
+/* 링크 스타일 */
+.toc a { display: block; text-decoration: none; color: #000000; }
+.toc a.active {outline: none; border-radius: 6px; }
+
+.toc a.active::before {
+  content: "➤ ";        /* 원하는 prefix 기호/문자 */
+  font-weight: bold;
+}
+
+.anchor {
+  opacity: 0;
+  margin-left: 8px;
+  text-decoration: none;
+  font-size: 0.9em;
+}

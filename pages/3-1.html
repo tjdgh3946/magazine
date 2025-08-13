@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/layout.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
 
   <script src="../assets/js/mathjax-config.js"></script>
 
@@ -65,7 +66,9 @@
       \mathcal{I}(\theta) = - \mathbb{E} \left[\frac{\partial^2}{\partial \theta} \log p_{\theta} (x)\right],
       \end{equation}
       where $\log p_{\theta} (x)$ is the $score$ of the distribution $p$. 
+      
       <h3>Visualization</h3>
+
       <div class="figure-wrap">
         <img src="figures/Fisher_information.png" alt="Fisher Information">
       </div>
@@ -85,7 +88,6 @@
     </article>
     
   </main>
-
     <!-- 오른쪽 메뉴 -->
     <aside class="r-rail">
       <div class="menu">
@@ -106,6 +108,18 @@
             <span class="menu-label">Refresh</span>
             🔄
           </button>
+        
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
         </div>
     </div>
     </aside>

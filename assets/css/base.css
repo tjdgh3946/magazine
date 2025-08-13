@@ -14,7 +14,8 @@ body{ margin:0; color:var(--ink); background: #fff; }
   --shadow: 6px 6px 0 rgba(0,0,0,.35);
   --radius: 18px;
   --maxw: 980px;
-
+  --toc-w: 280px;
+  
   /* 사이드바 크기/간격 */
   --l-rail-w: 220px;
   --l-rail-gap: 14px;

@@ -1,8 +1,8 @@
 import { initMarquee } from './marquee.js';
 import { initUI } from './ui.js';
 import { initSideMarquee } from './marquee.js';
-
-
+import { slugify, initTOC} from './toc.js';
+ 
 function initPageKeywords() {
   const track = document.getElementById('tagTrack');
 
@@ -48,4 +48,10 @@ window.addEventListener('DOMContentLoaded', () => {
   initPageKeywords();
   //initMarquee();  
   initSideMarquee(imageData.slice().reverse()); 
+
+  initTOC({
+    contentSelector: 'main',
+    tocSelector: '#toc',
+    observeActive: true,
+  });
 });
