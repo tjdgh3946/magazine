@@ -4,5 +4,6 @@ latex/
 # GINZA OPS SCRIPTS (local only)
 *.sh
 
-# GODDAMN matplotlib playgroound 
+# GODDAMN 놀이터 
 graphics/
+playground/ 
