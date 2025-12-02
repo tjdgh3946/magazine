@@ -39,16 +39,22 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Show Slack JSON payload (debug only)
-        if: env.SLACK_MODE == 'send'
-        run: |
-          text="New magazine uploaded! 🖼️
-                https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
-                💬 \"${MESSAGE}\""
+          if: env.SLACK_MODE == 'send'
+          run: |
+            text="New magazine uploaded! 🖼️
+          https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
+          💬 \"${MESSAGE}\""
 
-          payload=$(jq -n --arg text "$text" '{text: $text}')
-          echo "=== JSON payload ==="
-          echo "$payload"
-          echo "PAYLOAD=$payload" >> $GITHUB_ENV
+              payload=$(jq -n --arg text "$text" '{text: $text}')
+              echo "=== JSON payload ==="
+              echo "$payload"
+
+              {
+                echo 'PAYLOAD<<EOF'
+                echo "$payload"
+                echo 'EOF'
+              } >> "$GITHUB_ENV"
+              
 
       - name: Send to Slack
         if: env.SLACK_MODE == 'send'
