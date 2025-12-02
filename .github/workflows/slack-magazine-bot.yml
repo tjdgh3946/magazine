@@ -8,39 +8,54 @@ on:
 
 jobs:
   announce:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_MSG: ${{ github.event.head_commit.message }}
+
     steps:
       - uses: actions/checkout@v3
 
+      - name: Decide Slack mode
+        id: mode
+        run: |
+          echo "Commit message: $COMMIT_MSG"
+          if [[ "$COMMIT_MSG" == *"[SLACK]"* ]]; then
+            echo "SLACK_MODE=send" >> $GITHUB_ENV
+          else
+            echo "SLACK_MODE=off" >> $GITHUB_ENV
+          fi
+          echo "Slack mode: $SLACK_MODE (will be available from next step)"
+
       - name: Parse metadata.js and extract info
         run: |
-          # 슬라이드 인덱스: { 개수로 계산 (기존 로직 유지)
+          # 슬라이드 인덱스 계산 ( { 개수 기준 )
           total=$(grep -o '{' metadata.js | wc -l)
           echo "SLIDE_INDEX=$total" >> $GITHUB_ENV
 
           # 마지막 message 한 줄만 뽑기
           message=$(grep '"message"' metadata.js | tail -n 1 | sed 's/.*"message":[[:space:]]*"\(.*\)".*/\1/')
-
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$message" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-
-      - name: Show Slack JSON payload (no send)
+      - name: Show Slack JSON payload (debug only)
+        if: env.SLACK_MODE == 'send'
         run: |
-          payload=$(cat <<EOF
-          {
-            "text": "New magazine uploaded! 🖼️
-          https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
-          \\n💬 \\\"${{ env.MESSAGE }}\\\"\"
-          }
-          EOF
-          )
-              echo "=== This is the JSON payload ==="
-              echo "$payload"
+          text="New magazine uploaded! 🖼️
+                https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
+                💬 \"${MESSAGE}\""
 
-              echo
-              echo "=== This is the curl command ==="
-              echo "curl -X POST -H 'Content-type: application/json' --data '$payload' $SLACK_WEBHOOK_URL"
+          payload=$(jq -n --arg text "$text" '{text: $text}')
+          echo "=== JSON payload ==="
+          echo "$payload"
+          echo "PAYLOAD=$payload" >> $GITHUB_ENV
 
-          
+      - name: Send to Slack
+        if: env.SLACK_MODE == 'send'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          echo "Sending to Slack..."
+          echo "curl -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" \
+            "$SLACK_WEBHOOK_URL""
