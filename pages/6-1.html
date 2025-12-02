@@ -56,46 +56,154 @@
       <!--div class="category">🖋 Conditional Expectation</div-->
 
       <section class="title-box">
-        <h1>Greedy K</h1>
-        <p class="dek"></p>
-        <div class="date">08 Aug 2025</div>
+        <h1>Privacy Tax</h1>
+        <p class="dek">
+        Approximate DP는 쉽게 말해서 
+        <strong>“확률질량 대부분은 순한 \((\varepsilon,0)\)-DP고, 
+        나머지 $\delta$는 실패 세트에 때려넣는 smoothed DP”</strong> 
+        정도로 보면 된다.
+        그런데 웃긴 건, 우리가 $P(E)=1-\delta$를 
+        <strong>정확히</strong> 알고 있을 때는 DP 파라미터가 멀쩡한데,
+        그걸 $P(E)\ge 1-\delta$처럼 
+        <strong>대충</strong>만 알고 있으면 
+        갑자기 \(\varepsilon\)에 
+        <strong>세금처럼 슬랙이 덕지덕지 붙어버린다</strong>는 점이다.
+        그래서 자연스럽게 나오는 질문은 이거다:
+        <strong>“도대체 뭐가 달라졌길래 ε이 갑자기 뜯겨나가는 거냐?”</strong>
+        </p>
+        <div class="date">02 Dec 2025</div>
       </section>
 
       <article class="body">
+      
+          <p>
+            우선, approximate DP는 보통 두 구간으로 나눠서 본다.
+            확률분포 $Y$에서 <strong>$E$</strong>는
+            <strong style="color:#2F4C7A">“순한 $(\varepsilon,0)$-DP가 잘 먹히는 좋은 영역”</strong>이고,
+            나머지 $\bar E$는 <strong>“망가져도 되는 실패영역”</strong>이다.
+            $E'$는 $Y'$에서의 같은 역할을 하는 대응 이벤트다.
+          </p>
 
-      <h3>Goal</h3>
+          <p>
+            Approx DP는 결국  
+            <strong style="color:#2F4C7A">
+              “확률질량 대부분(≥$1-\delta$)에서는 pure DP가 성립하고,  
+              나머지 $\delta$만큼은 실패해도 OK”
+            </strong>
+            라는 구조다.
+          </p>
+
+          <p>
+            문제는 이거다.  
+            $$P(E)=1-\delta$$ 를 <strong>정확히</strong> 알고 있을 때는 멀쩡하던 ε이,  
+            $$P(E)\ge 1-\delta$$ 처럼 <strong>대충만</strong> 알게 되면  
+            갑자기 ε에 세금처럼 슬랙이 붙어버린다.  
+            이게 도대체 왜 생기는 걸까?
+          </p>
+          
+        <h3>1. 조건부분포는 “확대(zoom)”이라서 조심해야 함</h3>
+
         <p>
-          This problem aims to select <em>k</em> cluster centers from a given set of points such that the
-          <span style="color: rgb(34, 34, 187);">maximum distance of any point to its closest center</span> is minimized.
-        </p>
-        <p>
-          Minimize:
-          $$\max_{v \in V} \min_{c \in C} d(v, c)$$
+          조건부 확률은 기본적으로
         </p>
 
-        <h3>Algorithm</h3>
-        <ol>
-          <li>임의의 한 점을 첫 번째 중심으로 선택</li>
-          <li>
-            이후에는 "가장 먼 점"—즉, 현재 선택된 중심들과의 거리 중 가장 큰 값을 갖는 점—을 새로운 중심으로 반복해서 선택
-          </li>
-          <li>총 <em>k</em>개의 중심이 선택될 때까지 반복</li>
-        </ol>
-        <div class="figure-wrap">
-          <img src="figures/greedyK.PNG" alt="Greedy k-center example" style="max-width: 100%;">
-        </div>
-
-        <h3>Guarantee: 2-Approximation</h3>
         <p>
-          Greedy로 선택된 <em>k</em>개의 중심으로 구성된 해의 최대 거리 <em>r</em>은 최적 해의 최대 거리의 최대 2배이다.
-        </p>
-        <p>
-          $$r \le 2 r^{\ast}$$
+          $$P(Y\in T \mid E) = \frac{P(Y\in T \cap E)}{P(E)}$$
         </p>
 
-        <h3>Complexity</h3>
-        
-        $\mathcal{O}(nkd)$ for $n$ points $\mathbb{R}^d$.
+        <p>
+          이렇게 생겨서, $P(E)$가 커지면 확대 배율은 작아지고,  
+          $P(E)$가 작아지면 확대가 심해진다.  
+          즉 <strong>조건부분포는 원래 분포를 $1/P(E)$만큼 뻥튀기한 버전</strong>이다.
+        </p>
+
+        <p>
+          좋은 영역에서 우리는
+          $$P(Y\in T\mid E) \le e^\varepsilon P(Y'\in T\mid E')$$
+          를 알고 있지만, 이걸 다시 전체 분포로 끌어올릴 때는
+          이 확대 팩터 때문에 곱이 자연스럽게 $P(E)$, $P(E')$를 타고 들어온다.
+        </p>
+
+        <h3>2. $P(E)=P(E')=1-\delta$라면? → ε 세금 없음</h3>
+
+        <p>
+          둘 다 정확히 $1-\delta$면 전체 분포가 아주 예쁘게 정리된다:
+        </p>
+
+        <p>
+          $$P(Y\in T) = (1-\delta)P(Y\in T\mid E) + \delta(\text{아무거나})$$
+          $$P(Y'\in T) \ge (1-\delta)P(Y'\in T\mid E')$$
+        </p>
+
+        <p>
+          동일한 $(1-\delta)$가 양쪽 분포에 똑같이 붙으니,
+          조건부에서의 $e^\varepsilon$ 비율이 전체에서도 그대로 유지된다.
+        </p>
+
+        <p>
+          그래서 바로
+          <div class="ginzabox">
+          $$P(Y\in T) \le e^\varepsilon P(Y'\in T) + \delta$$
+          </div>
+          를 얻을 수 있다.  
+          즉, <strong style="color:#2F4C7A">확률을 정확히 알고 있으면 확대스케일이 양쪽 동일 → ε에 세금 없음</strong>.
+        </p>
+
+        <h3>3. $P(E),P(E')\ge 1-\delta$만 알 때? → ε에 슬랙 붙음</h3>
+
+        <p>
+          이제 문제 구간.  
+          $P(E)$와 $P(E')$의 <strong>정확한 값</strong>을 모르고,
+          둘 다 “최소한 이 정도는 된다” 수준만 알면,
+        </p>
+
+        <p>
+          $$\frac{P(E)}{P(E')}$$
+        </p>
+
+        <p>
+          같은 비율이 얼마든지 벌어질 수 있다.  
+          최악의 경우는 당연히
+        </p>
+
+        <p>
+          $$\frac{P(E)}{P(E')} \le \frac{1}{1-\delta}.$$
+        </p>
+
+        <p>
+          이걸 넣으면 전체 DP 부등식이 이렇게 튄다:
+        </p>
+
+        <p>
+          $$P(Y\in T) \le e^\varepsilon \frac{1}{1-\delta} P(Y'\in T) + \delta.$$
+        </p>
+
+        <p>
+          즉,
+          <div class="ginzabox">
+          <div class="ginzabox-title">
+          Tax 💸            
+          </div> 
+          $$\varepsilon' = \varepsilon + \log\frac{1}{1-\delta}.$$
+          </div>
+        </p>
+
+        <p>
+          이게 바로 우리가 말하는 
+          <strong style="color:#2F4C7A">“privacy 세금”</strong>이다.  
+          뭔가 메커니즘이 더 나빠진 게 아니라,
+          <strong>확률을 정확히 몰라서 최악의 확대 비율까지 커버하려고 “보험료”를 더 내는 것</strong>.
+        </p>
+
+        <h3>4. 직관 요약</h3>
+
+        <ul>
+          <li>$Y|E$는 원래 분포를 $1/P(E)$만큼 확대해 본 것.</li>
+          <li>$P(E)=P(E')=1-\delta$ 같은 정확한 값을 알면 확대가 양쪽 동일 → ε 유지.</li>
+          <li>$P(E)\ge 1-\delta$처럼 대충만 알면 확대 비율이 튈 수 있어  
+              → 최악 케이스 대비하느라 $\log\frac{1}{1-\delta}$ 만큼 ε에 슬랙 추가.</li>
+        </ul>
+      
       <footer class="tag-footer">
         <div id="tagTrack"></div>
       </footer>  

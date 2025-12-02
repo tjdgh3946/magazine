@@ -81,9 +81,9 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder no 상관",
     "keywords": [
-      "WRITE KEYWORD"
+      ["Differential privacy"]
     ],
-    "title": "Title",
-    "message": "Nastyyyy Ginza test slack message"
+    "title": "Privacy tax",
+    "message": "[Nasty Ginza Test]: Privacy Tax"
   }
 ];

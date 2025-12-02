@@ -56,6 +56,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           echo "Sending to Slack..."
-          echo "curl -X POST -H 'Content-type: application/json' \
+          curl -X POST -H 'Content-type: application/json' \
             --data "$PAYLOAD" \
-            "$SLACK_WEBHOOK_URL""
+            "$SLACK_WEBHOOK_URL"
