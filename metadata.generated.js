@@ -85,5 +85,18 @@ window.imageData = [
     ],
     "title": "WRITE TITLE",
     "message": "WRITE MESSAGE"
+  },
+  {
+    "date": "2025-12-02",
+    "filename": "thumbnail/slide-3EbASbuFCwU.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-woman-in-a-brown-dress-and-black-boots-3EbASbuFCwU",
+    "styleHint": "zara",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "keyword"
+    ],
+    "title": "",
+    "message": ""
   }
 ];

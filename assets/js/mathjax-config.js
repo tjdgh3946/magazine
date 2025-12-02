@@ -7,16 +7,20 @@ window.MathJax = {
       id: (id) => id               // 프리픽스 제거
     },
     inlineMath: [['\\(','\\)'], ['$', '$']],
-    displayMath: [['\\[','\\]'], ['$$','$$']]
+    displayMath: [['\\[','\\]'], ['$$','$$']],
+    macros: {
+      bm: ["\\boldsymbol{#1}", 1],   // ✅ \bm{X} → \boldsymbol{X}
+      vx: '{\\boldsymbol{x}}'
+    },
   },
   options: {
     skipHtmlTags: ['script','noscript','style','textarea','pre','code']
-  }
+  },
 };
 
 (function(){
   const script = document.createElement('script');
   script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js";
-  script.async = true;
+  //script.async = true;
   document.head.appendChild(script);
 })();

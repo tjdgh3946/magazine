@@ -43,12 +43,14 @@ export function initSideMarquee(list){
 
   // 1) 콘텐츠 렌더
   track.innerHTML = '';
+  list.reverse();
   list.forEach((data, i) => {
   const idx = (typeof data.index === 'number') ? data.index : i;
 
   const a = document.createElement('a');
+  console.log(data.title);
   a.className = 'side-item';
-  a.href = withBase(`pages/${idx + 1}-1.html`);
+  a.href = withBase(`pages/${idx+1}-1.html`);
   a.setAttribute('aria-label', data.title || data.caption || 'article');
 
   // 썸네일 박스

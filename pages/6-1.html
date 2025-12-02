@@ -23,7 +23,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>〈Saint Laurent〉洗練と反骨のはざま</title>
+  <title>MAGAZINE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="%%PAGE_DESCRIPTION%%">
   <meta name="color-scheme" content="light dark">
@@ -42,61 +42,66 @@
   <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
   </header>
 
-  <div class="wrap">
+  
     <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
     <aside class="l-rail" aria-label="side marquee">
       <div class="side-marquee">
         <div class="side-track" id="sideTrack"></div>
       </div>
     </aside>
-
+  
     <main class="article">
 
       <!--div class="category">🖋 Conditional Expectation</div-->
 
       <section class="title-box">
-        <h1>Conditional Expectation</h1>
-        <p class="dek">Some facts about the conditional expecation.</p>
+        <h1>Greedy K</h1>
+        <p class="dek"></p>
         <div class="date">08 Aug 2025</div>
       </section>
 
       <article class="body">
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
-        <h3>1. It is a $L_2$-minimizer</h3> 
-        \[
-          \mathbb{E}[Y|X] = \arg \min_{g(X)} \mathbb{E} [ (Y- g(X))^2]
-        \]
-        $\implies$ Conditional expecation is the best predictor of $Y$ given $X$ in $L_2$ sense. 
-        
-        <br> 
+      <h3>Goal</h3>
+        <p>
+          This problem aims to select <em>k</em> cluster centers from a given set of points such that the
+          <span style="color: rgb(34, 34, 187);">maximum distance of any point to its closest center</span> is minimized.
+        </p>
+        <p>
+          Minimize:
+          $$\max_{v \in V} \min_{c \in C} d(v, c)$$
+        </p>
 
-        <h3>2. Projection theorem</h3> 
-        \[
-          \mathbb{E}[ (Y - \mathbb{E}[Y | X]) \cdot g(X)] = 0 \quad \forall g
-        \]
-        $\implies$ $Y - \mathbb{E}[Y | X]$ is orthogonal to all $g(X)$ 
-        <div class="ginzabox">
-        <div class="ginzabox-title">
-        Example               
-        </div> 
-        Find optimal $f$ such that  
-        \begin{equation}
-        \min_{f \; \text{measurable}}
-        \mathbb{E}_{X,Y} \left[ | f(X+ aY) - Y|^2\right]
-        \label{eq:1}
-        \end{equation}
-
-        \begin{equation}
-        f^*(z) = \frac{z - \mathbb{E}[X \mid Z=z]}{a}
-        \label{eq:sol}
-        \end{equation}
+        <h3>Algorithm</h3>
+        <ol>
+          <li>임의의 한 점을 첫 번째 중심으로 선택</li>
+          <li>
+            이후에는 "가장 먼 점"—즉, 현재 선택된 중심들과의 거리 중 가장 큰 값을 갖는 점—을 새로운 중심으로 반복해서 선택
+          </li>
+          <li>총 <em>k</em>개의 중심이 선택될 때까지 반복</li>
+        </ol>
+        <div class="figure-wrap">
+          <img src="figures/greedyK.PNG" alt="Greedy k-center example" style="max-width: 100%;">
         </div>
-      </article>
+
+        <h3>Guarantee: 2-Approximation</h3>
+        <p>
+          Greedy로 선택된 <em>k</em>개의 중심으로 구성된 해의 최대 거리 <em>r</em>은 최적 해의 최대 거리의 최대 2배이다.
+        </p>
+        <p>
+          $$r \le 2 r^{\ast}$$
+        </p>
+
+        <h3>Complexity</h3>
+        
+        $\mathcal{O}(nkd)$ for $n$ points $\mathbb{R}^d$.
       <footer class="tag-footer">
-      <div id="tagTrack"></div>
-    </footer>  
-    </main>
+        <div id="tagTrack"></div>
+      </footer>  
+    </article>
+    
+  </main>
 
     <!-- 오른쪽 메뉴 -->
     <aside class="r-rail">
@@ -134,4 +139,5 @@
     </aside>
   </div>
 </body>
+
 </html>

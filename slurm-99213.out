@@ -1,0 +1,5 @@
+Wed 03 Sep 2025 07:48:07 PM KST: Started code-server
+Serving on https://a6k01.tail228f0.ts.net:16529
+[2025-09-03T10:48:07.757Z] error got error from VS Code [38;2;140;140;140m{"error":{"errno":-2,"code":"ENOENT","syscall":"connect","address":"/tmp/vscode-ipc-67556f09-4768-4b24-be3e-8126c675af99.sock"}}[0m
+************************
+Job 99213 ended!
