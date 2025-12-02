@@ -13,45 +13,19 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Parse metadata.js and extract info
-        id: parse
         run: |
-          # Get last object block
-          last_block=$(awk '/{/{f=1} f; /}/{f=0}' metadata.js | tail -n 20)
-          echo "$last_block" > latest_meta.txt
-
-          # Count number of { to get index
+          # 슬라이드 인덱스: { 개수로 계산 (기존 로직 유지)
           total=$(grep -o '{' metadata.js | wc -l)
-          echo "SLIDE_INDEX=$((total))" >> $GITHUB_ENV
+          echo "SLIDE_INDEX=$total" >> $GITHUB_ENV
 
-          # Extract multi-line message safely
-          message=$(awk '
-            BEGIN {found=0; msg=""}
-            /message:/ {
-              found=1
-              sub(/^.*message:[[:space:]]*"/, "")
-              if ($0 ~ /"[,]*[[:space:]]*$/) {
-                sub(/"[,]*[[:space:]]*$/, "")
-                msg = $0
-                found=0
-              } else {
-                msg = $0
-              }
-              next
-            }
-            found {
-              if ($0 ~ /"[,]*[[:space:]]*$/) {
-                sub(/"[,]*[[:space:]]*$/, "")
-                msg = msg "\n" $0
-                found=0
-              } else {
-                msg = msg "\n" $0
-              }
-            }
-            END {print msg}
-          ' latest_meta.txt)
+          # 마지막 message 한 줄만 뽑기
+          message=$(grep '"message"' metadata.js | tail -n 1 | sed 's/.*"message":[[:space:]]*"\(.*\)".*/\1/')
+
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$message" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+
       - name: Show Slack JSON payload (no send)
         run: |
           payload=$(cat <<EOF
