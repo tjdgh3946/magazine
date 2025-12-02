@@ -58,7 +58,7 @@ jobs:
           {
             "text": "New magazine uploaded! 🖼️
           https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
-          💬 \"${env.MESSAGE}\""
+          \\n💬 \\\"${{ env.MESSAGE }}\\\"\"
           }
           EOF
           )
