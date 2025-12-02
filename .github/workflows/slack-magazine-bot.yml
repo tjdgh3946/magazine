@@ -8,7 +8,7 @@ on:
 
 jobs:
   announce:
-    if: false  # 🔇 얘 한 줄이면 전체 작업 스킵됨
+    #if: false  # 🔇 얘 한 줄이면 전체 작업 스킵됨
     runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v3
@@ -58,6 +58,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' --data "{
-            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/#/${{ env.SLIDE_INDEX }}\\n💬 \\\"${{ env.MESSAGE }}\\\"\"
-          }" $SLACK_WEBHOOK_URL
+          echo "curl -X POST -H 'Content-type: application/json' --data "{
+            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html\\n💬 \\\"${{ env.MESSAGE }}\\\"\"
+          }" $SLACK_WEBHOOK_URL"

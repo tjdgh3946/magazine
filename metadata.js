@@ -84,6 +84,6 @@ window.imageData = [
       "WRITE KEYWORD"
     ],
     "title": "WRITE TITLE",
-    "message": "WRITE MESSAGE"
+    "message": "Nasty test message"
   }
 ];
