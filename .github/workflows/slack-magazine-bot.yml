@@ -53,11 +53,21 @@ jobs:
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$message" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
-      - name: Send to Slack
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Show Slack JSON payload (no send)
         run: |
-          echo "curl -X POST -H 'Content-type: application/json' --data "{
-            \"text\": \"New magazine uploaded! 🖼️\\nhttps://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html\\n💬 \\\"${{ env.MESSAGE }}\\\"\"
-          }" $SLACK_WEBHOOK_URL"
+          payload=$(cat <<EOF
+          {
+            "text": "New magazine uploaded! 🖼️
+          https://tjdgh3946.github.io/magazine/pages/${SLIDE_INDEX}-1.html
+          💬 \"${MESSAGE}\""
+          }
+          EOF
+          )
+              echo "=== This is the JSON payload ==="
+              echo "$payload"
+
+              echo
+              echo "=== This is the curl command ==="
+              echo "curl -X POST -H 'Content-type: application/json' --data '$payload' $SLACK_WEBHOOK_URL"
+
+          
