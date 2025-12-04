@@ -6,6 +6,7 @@
 ### Section 새로 생성하고 편집하는법 
 - Run `./scripts/create_section.sh {new section name}` 
 - Run `openTex {new section name}` and edit
+- `notes/` 폴더에 `{new section name}.pdf`으로 더미 파일 생성하기 (Jekyll 오류 방지)
 
 ### Thumbnail Style
 🧍‍♀️ 인물 / 풍경 기본 스타일
