@@ -3,6 +3,9 @@
 -  Edit the `generated pages/x.html` and `metadata.js`
 -  `scripts/publish.sh` 로 커밋 
 
+### Section 새로 생성하고 편집하는법 
+- Run `./scripts/create_section.sh {new section name}` 
+- Run `openTex {new section name}` and edit
 
 ### Thumbnail Style
 🧍‍♀️ 인물 / 풍경 기본 스타일

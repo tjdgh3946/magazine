@@ -85,5 +85,18 @@ window.imageData = [
     ],
     "title": "Privacy tax",
     "message": "[Nasty Ginza Test]: Privacy Tax"
+  },
+  {
+    "date": "2025-12-04",
+    "filename": "thumbnail/dp-in-bayesian-perspective-4vX0gPy7IpM.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-label-on-a-sweater-that-says-zara-4vX0gPy7IpM",
+    "styleHint": "zara",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "Differential privacy, Bayesian"
+    ],
+    "title": "DP in Bayesian perspective",
+    "message": "출력 y 하나 보고도 공격자가 멍청해지는 이유 👯‍♂️"
   }
 ];

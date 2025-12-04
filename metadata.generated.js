@@ -81,22 +81,22 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder no 상관",
     "keywords": [
-      "WRITE KEYWORD"
+      "Differential privacy"
     ],
-    "title": "WRITE TITLE",
-    "message": "WRITE MESSAGE"
+    "title": "Privacy tax",
+    "message": "[Nasty Ginza Test]: Privacy Tax"
   },
   {
-    "date": "2025-12-02",
-    "filename": "thumbnail/slide-3EbASbuFCwU.jpg",
-    "sourceURL": "https://unsplash.com/photos/a-woman-in-a-brown-dress-and-black-boots-3EbASbuFCwU",
+    "date": "2025-12-04",
+    "filename": "thumbnail/dp-in-bayesian-perspective-4vX0gPy7IpM.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-label-on-a-sweater-that-says-zara-4vX0gPy7IpM",
     "styleHint": "zara",
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
-      "keyword"
+      "Differential privacy"
     ],
-    "title": "",
-    "message": ""
+    "title": "DP in Bayesian perspective",
+    "message": "출력 y 하나 보고도 공격자가 멍청해지는 이유"
   }
 ];

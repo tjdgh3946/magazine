@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+      <h1>DP in Bayesian perspective</h1>
+
+      <p class="dek">
+        Differential Privacy를 베이지안으로 까보면 아주 재밌는 일이 생긴다.  
+        공격자는 $X$(너 있음)와 $X'$(너 없음) 사이에서  
+        <strong>“대체 어느 게 진짜냐”</strong>를 구분하려고 발버둥을 치는데,  
+        DP는 그걸 보고 이렇게 말한다:
+        <strong style="color:#2F4C7A;">“아무리 $y$를 봐도 넌 둘 중 아무거나나 믿어라. 거의 똑같으니까.”</strong>
+      </p>
+
+      <p class="dek">
+        사후 확률이 $1/2$에서 $±\varepsilon$만큼밖에 안 흔들린다는 사실 하나로  
+        <strong>곱셈형 DP 조건 $e^{\pm \varepsilon}$</strong>이 
+        <em>그냥 자동으로 튀어나온다.</em>  
+        즉, 베이지안 관점에서는 DP가
+        <strong>“출력을 보고도 너 존재감이 0에 수렴한다”</strong>  
+        라는 매우 단순한 철학으로 정리된다.
+      </p>
+
+      <p class="dek">
+        그래서 자연스럽게 나오는 질문은 이거다:  
+        <strong>“사후확률이 안 변하면 왜 출력 확률 비율이 $e^{\pm\varepsilon}$ 꼴로 고정되는 거냐?”</strong>  
+        이 글은 바로 그 지점을 파헤쳐본다.
+      </p>
+
+      <div class="date">04 Dec 2025</div>
+    </section>
+
+
+      <article class="body">
+        <p>
+    DP 정의는 “출력 확률이 $e^{\varepsilon}$ 만큼만 흔들린다”는 
+    <strong>곱셈형 조건</strong>이다.  
+    하지만 사실 이걸 <strong>베이지안 관점</strong>에서 보면 훨씬 자연스럽고,
+    “왜 이런 곱셈 조건이 나오는지” 감각적으로 이해된다.
+  </p>
+
+  <h3>1. 두 개의 세계: $X$ 와 $X'$</h3>
+
+  <p>
+    공격자는 두 세계 중 하나가 실제라고 믿는다:
+  </p>
+
+  <ul>
+    <li>$X$ = 진짜 데이터셋</li>
+    <li>$X'$ = 너 한 명 빠진 데이터셋</li>
+  </ul>
+
+  <p>
+    둘의 차이는 단 1명.  
+    공격자의 사전(prior)은 보통 <strong>$X$와 $X'$가 $1/2$씩</strong>일 확률을 갖는다.
+  </p>
+
+  <p>
+    이제 알고리즘이 어떤 출력 <strong>$y$</strong>를 뱉었다고 하자.  
+    공격자는 당연히 <strong>사후 확률</strong>을 계산한다:
+  </p>
+
+  <p style="font-style:italic; color:#555;">
+    “$y$를 봤으니까, $X$가 진짜일 확률이 얼마나 바뀌었을까?”
+  </p>
+
+  <h3>2. Differential Privacy가 보장하는 것</h3>
+
+  <p>
+    DP는 사실 이렇게 말한다:
+  </p>
+
+  <p style="font-weight:bold; color:#2F4C7A;">
+    “출력 $y$를 봐도 $X$일 확률과 $X'$일 확률이 거의 안 변한다.”
+  </p>
+
+  <p>
+    즉, 공격자의 사후확률이 사전확률에서 <strong>$\varepsilon$ 만큼</strong>만 바뀐다.  
+    정보이론 용어로는 <strong>statistical distance $\le 2\varepsilon$</strong>.
+  </p>
+
+  <p>
+    이것이 “Bayesian privacy $\Rightarrow$ DP” 의 핵심 구조다.
+  </p>
+
+  <hr style="margin:30px 0;">
+
+  <h3>3. Proposition: DP는 사후확률을 거의 못 바꾼다</h3>
+
+  <div class="ginzabox">
+  <div class="ginzabox-title">Proposition</div>
+  Let $M : X^n \to Y$ be any $\varepsilon$-differentially private mechanism,  
+  and let $(X, X')$ be any joint distribution on $X^n \times X^n$ such that  
+  $\Pr[X \sim X'] = 1$.  
+  Then for every dataset $x \in X^n$ and output $y \in \mathrm{Supp}(M(X)) = \mathrm{Supp}(M(X'))$,
+  we have
+  </p>
+
+  <p style="text-align:center; font-weight:bold;">
+  $$
+  \mathrm{SD}\big( X \mid M(X)=y,\; X' \mid M(X')=y \big) \le 2\varepsilon.
+  $$
+  </div>
+
+  <p>즉, 
+    $M$이 $\varepsilon$-DP이면,  
+    출력 $y$를 본 뒤의 <strong>사후 분포</strong>는  
+    “너가 있었을 때($X$)”와 “없었을 때($X'$)”의 두 경우가  
+    서로 <strong>$2\varepsilon$ 이내</strong>로만 다르다.
+  </p>
+
+
+  <h3>4. 반대로: Bayesian privacy ⇒ DP (Proposition 7.1.7)</h3>
+
+  <p>
+    거꾸로도 성립한다.  
+    “사후가 거의 안 변한다”는 조건을 가정하면,  
+    곧바로 DP의 곱셈 조건이 따라온다.
+  </p>
+
+  <div class="ginzabox">
+    <p>
+      사후 확률이  
+      $$\Pr[X = x_b \mid y] \in \left[\frac{1}{2} - \varepsilon,\; \frac{1}{2} + \varepsilon\right]$$  
+      범위 안에서만 움직이면,
+    </p>
+    <p>
+      출력 확률도  
+      $$e^{-O(\varepsilon)} \le 
+        \frac{\Pr[M(x_0)=y]}{\Pr[M(x_1)=y]} \le 
+        e^{O(\varepsilon)}$$  
+      를 만족한다.
+    </p>
+  </div>
+
+  <p>
+    즉, 사후가 안정적이면 출력도 DP적으로 안정적이다.
+  </p>
+
+  <h3>5. 왜 비율이 $e^{\pm O(\varepsilon)}$ 가 되는가?</h3>
+
+  <p>
+    베이즈 식 하나면 끝이다:
+  </p>
+
+  <p style="text-align:center; font-style:italic;">
+    $$\Pr[M(x_b)=y]  
+    = \frac{\Pr[X=x_b \mid y] \cdot \Pr[M(X)=y]}{\Pr[X = x_b]}.$$
+  </p>
+
+  <p>
+    사전은 $\Pr[X = x_b] = 1/2$,  
+    사후는 $(1/2 \pm \varepsilon)$ 이라면,
+  </p>
+
+  <p style="text-align:center; font-weight:bold;">
+    $$\frac{\Pr[M(x_0)=y]}{\Pr[M(x_1)=y]}
+      \in \left[\frac{\frac12 - \varepsilon}{\frac12 + \varepsilon},\;
+               \frac{\frac12 + \varepsilon}{\frac12 - \varepsilon}\right].$$
+  </p>
+
+  <p>
+    이 분수가 바로 $e^{\pm O(\varepsilon)}$ 꼴로 변환된다.  
+    그래서 <strong>DP는 곱셈형 조건으로 나타나는 것이 자연스럽다.</strong>
+  </p>
+
+  <hr style="margin:30px 0;">
+
+  <h3>6. 한 줄 정리</h3>
+
+  <div class="ginzabox" style="font-weight:bold; text-align: center;">
+    Differential Privacy =  
+    “출력을 보고도 사후확률이 거의 안 바뀌는 메커니즘.”
+  </div>
+
+  <p>
+    그래서 DP는 공격자 입장에서  
+    <span style="color:#2F4C7A;">너가 있었는지 없었는지가 거의 indistinguishable</span>  
+    해지도록 만든다.
+  </p>
+
+    <div style="font-size:0.85em; color:#777; margin-top:15px;">
+    Reference:  
+    Salil Vadhan, <em>The Complexity of Differential Privacy</em>,  
+    2017.  
+    <a href="https://salil.seas.harvard.edu/sites/g/files/omnuum4266/files/salil/files/the_complexity_of_differential_privacy.pdf" target="_blank">
+      PDF link
+    </a>
+  </div>
+
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>
