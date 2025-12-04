@@ -97,6 +97,6 @@ window.imageData = [
       "Differential privacy, Bayesian"
     ],
     "title": "DP in Bayesian perspective",
-    "message": "출력 y 하나 보고도 공격자가 멍청해지는 이유 👯‍♂️"
+    "message": "출력 y 하나 보고도 공격자가 멍청해지는 이유 🤷‍♂️👯‍♂️"
   }
 ];
