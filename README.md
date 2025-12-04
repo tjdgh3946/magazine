@@ -1,7 +1,7 @@
 ## ✍️ How to write?
 -  Type `./scripts/magazineUpdate.sh` in the terminal
 -  Edit the `generated pages/x.html` and `metadata.js`
--  `scripts/publish.sh` 로 커밋    (slack에도 올리고 싶으면 --slack)
+-  `scripts/publish.sh` 로 커밋    (slack에도 올리고 싶으면 --slack, 재 commit시 metadata.js 수정해야지 slack message에 전송됨)
 
 ### Section 새로 생성하고 편집하는법 
 - Run `./scripts/create_section.sh {new section name}` 
