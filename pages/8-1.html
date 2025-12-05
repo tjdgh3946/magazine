@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <article class="body">
+        <!-- WRITE GODDAMN MAGAZINE-->
+        <section class="title-box">
+    <h1>“AIME는 푸는데, 리만가설은 못 푼다” — 2025년 AI 수학의 능력과 한계</h1>
+
+    <p class="dek">
+      최신 대형언어모델(LLM)은 AIME 같은 <strong>정답형 대회</strong>에선 눈부시게 잘한다.
+      Python 계산·탐색·다중 시도(decoding)만 허용해도, 숫자를 맞히는 일은 빠르게 상향 평준화된다.
+      하지만 <strong>증명형 과제</strong>로 올라가면 얘기가 달라진다.
+    </p>
+
+    <p class="dek">
+      핵심은 간단하다.
+      <strong style="color:#2F4C7A;">AI는 ‘정답을 찾는 엔진’으론 강해졌지만, ‘정리를 발명하고 끝까지 논증하는 엔진’으로는 아직 미완성</strong>이다.
+      특히 자연어 아이디어를 형식 논리(Lean/Isabelle)로 옮기고, 새로운 개념을 세우는 단계에서
+      병목이 크게 드러난다.
+    </p>
+
+    <p class="dek">
+      이 글은 ① 정답형과 증명형의 본질 차이, ② 정답형 성능을 끌어올린 세 가지 엔진,
+      ③ 왜 리만가설 같은 <em>대미해 난제</em>는 여전히 난공불락인지,
+      ④ 무엇이 다음 브레이크스루를 만들지 정리한다.
+    </p>
+
+    <div class="date">05 Dec 2025</div>
+  </section>
+
+  <article class="body">
+
+    <p>
+      본문에 제시되는 사례·벤치마크·프로젝트는 향후 링크를 달아 검증 가능하게 정리할 예정이다.
+      여기서는 <strong>칼럼용 서사</strong>에 집중해 “무엇을 강조하고, 무엇을 경계해야 하는지”에 초점을 맞춘다.
+    </p>
+
+    <hr/>
+
+    <h2 id="exam-venues">1) 시험장이 달라지면 성적도 달라진다</h2>
+    <p>
+      수학 평가에는 크게 두 부류가 있다. 하나는 <strong>정답형(arithmetical/short-answer)</strong>,
+      다른 하나는 <strong>증명형(proof-writing)</strong>이다.
+    </p>
+
+    <ul>
+      <li><strong>정답형(AIME류)</strong>: 최종 출력은 보통 한 자리 수 혹은 세 자리 정수다. 
+        모델이 $k$개의 시도에서 계산/경우 분석을 해 본 뒤 다수결로 
+        $\hat{y}\in\{0,\dots,999\}$를 고르면 된다.  
+        <br>
+        예를 들어, $x + 1/x = 3$이 주어졌을 때 $x^6 + 1/x^6$를 구하라고 하면  
+        AI는 아래처럼 거의 반사적으로 “거듭제곱 패턴”을 굴린다.  
+
+        
+        <div class="ginzabox">
+        <div class="ginzabox-title">🧠 LLM Mind: $x^6 + 1/x^6$ 구하기</div>
+
+        <strong>Step 1 — 2제곱 전개</strong>  
+        $$ (x + 1/x)^2 = 9 \;\Rightarrow\; x^2 + 1/x^2 = 7 $$
+
+        <strong>Step 2 — 3제곱 전개</strong>  
+        $$ (x + 1/x)^3 = 27 \;\Rightarrow\; x^3 + 1/x^3 = 18 $$
+
+        <strong>Step 3 — 목표(6제곱) 도달</strong>  
+        $$ x^6 + 1/x^6 = (x^3 + 1/x^3)^2 - 2 = 322 $$
+        </div>
+
+        이런 루틴은 사람 눈에는 “풀이”처럼 보이지만, 모델 입장에서는  
+        <em>미리 학습된 변환 패턴 + 코드 실행기 조합</em>에 가깝다.  
+        실행기(파이썬)와 계산 보조가 허용되면 난도는 체감상 크게 낮아진다.
+      </li>
+
+      <li>
+  <strong>증명형(USAMO/IMO/연구 문제)</strong>: 요구 산출물은 말 그대로 <em>완결된 논증</em>이다.  
+  정답을 맞히는 것에서 끝나는 게 아니라, <strong>문제 서술 → 형식화 → 다이어그램 → 추론 → 서술</strong>까지
+  전체 파이프라인을 설계해야 한다. AlphaGeometry2는 이 파이프라인이 얼마나 복잡한지 잘 보여준다.
+
+  <br/><br/>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">📐 AlphaGeometry2 기준으로 본 “증명형”의 난이도</div>
+
+    <p>
+      <strong>1) 자동 형식화(auto-formalization)</strong><br/>
+      자연어 기하 문제 
+      <em>“이등변삼각형 $ABC$에서 $AB = AC$이면 $\angle B = \angle C$임을 증명하라”</em> 는  
+      <span style="color: blue">AG 도메인 언어</span>로는 대략
+      <code style="color: blue">triangle a b c; a b = a c ? eqangle b a b c c b c a</code>  
+      같이 바뀐다. 이건 단순 번역이 아니라:
+    </p>
+    <ul>
+      <li>어떤 객체(점, 선, 원)를 명시적으로 도입할지 결정하고,</li>
+      <li>“이등변”, “내심” 같은 자연어 표현을 적절한 술어로 <strong>재구성</strong>하고,</li>
+      <li>애매한 표현은 하나의 논리 형태로 <strong>결정</strong>해야 한다.</li>
+    </ul>
+    <p>
+  AlphaGeometry2는 이 귀찮고 어려운 형식화 작업을 그냥 대형 모델(Gemini)에게 맡긴다.  
+  먼저 사람 손으로 예시 몇십 개를 AG 언어로 만들어 “이렇게 번역해라” 하고 보여준다.  
+  그러면 Gemini에게 같은 문제를 다섯 번 번역시키고,  
+  다시 Gemini를 한 번 더 불러서  
+
+  <div align="center" style="margin:10px 0; font-weight:bold; font-size:1.05em;">
+    “야, 이 다섯 개 좀 섞어서<br>딱 봐도 제일 그럴듯한 버전 하나로 만들어줘.”
+  </div>
+
+  그리고 그 결과물을 최종 AG 스크립트로 갈아끼운다.
+  이렇게 해서 IMO 2000–2024 기하 문제 중 번역 가능한 44문제 중 33개를 자동 변환했다.  
+  즉, <em>문제 읽고 AG 언어로 옮기는 것 자체가 이미 어려워서 AI한테도 ‘두 번 돌리고 섞기’가 필요한 수준</em>이다.
+  </p>
+
+    <p>
+      <strong>2) 자동 다이어그램 생성(diagram generation)</strong><br/>
+      AG1에서는 각 점이 “직선 위”, “원 위” 같은 기본 조건 두 개 정도로만 정의돼서  
+      도형 만들기가 비교적 쉬웠다.  
+
+      하지만 AG2는  
+      “내심 $I$인데 거기다 $IA = 2IB$까지 만족해라”  
+      같은 “말만 들으면 간단한데 실제론 어떻게 그릴지 감도 안 오는 조건”까지 허용한다.  
+
+      이런 건 자(compass)·자(ruler)로 그릴 수 있는 수준이 아니라서,  
+      다이어그램 생성이 그냥 <strong>“수학적으로 맞는 그림을 찾아내는 비선형 최적화 문제”</strong>로 격상돼 버린다.
+    </p>
+
+    <p>
+      AlphaGeometry2의 다이어그램 생성은 대략 다음과 같다:
+    </p>
+    <ol>
+      <li>
+        <strong>초기화 단계</strong><br/>
+        여러 번의 시도(attempt)에서  
+        (1) 완전 랜덤 배치, (2) 주어진 술어 순서대로 점을 세우기,  
+        (3) 휴리스틱하게 순서를 정해 작도하기  
+        세 가지 전략을 번갈아 쓰며 초기 좌표를 만든다.
+      </li>
+      <li>
+        <strong>점 $X$의 후보 생성</strong><br/>
+        각 술어 $p(X, A_1,\dots,A_k)$를 보고, $X$가 올라가야 할 직선/원들을 찾는다.  
+        예를 들어 $|A_1A_2| = |A_3X|$이면, 이미 주어진 $A_1, A_2, A_3$로부터  
+        <span style="color: blue">“중심이 $A_3$이고 반지름이 $|A_1A_2|$인 원” 위에 $X$</span>가 있어야 한다.  
+        가능한 직선/원 조건이 여러 개면 그 교점들에서 10개 정도를 샘플링하고,  
+        이후 손실 함수를 기준으로 가장 좋은 후보 하나를 택한다.
+      </li>
+      <li>
+        <strong>비선형 최적화로 제약 맞추기</strong><br/>
+        모든 점의 좌표를 담은 벡터를 $\bar{x} \in \mathbb{R}^{2n}$이라 두고,  
+        각 <em>정확 제약</em> $c$에 대해 $f_c(\bar{x}) = 0$,  
+        <em>위상 제약</em> $c$에 대해 $g_c(\bar{x}&lt; 0$ 또는 $h_c(\bar{x}) \neq 0$ 꼴의 함수로 인코딩한다.  
+        전체 손실은
+      </li>
+    </ol>
+
+    $$
+    \begin{aligned}
+    L(\bar{x})  &= \sum_{c \in C_{\text{eq}}} f_c(\bar{x})^2 + \sum_{c \in C_{\text{top}<}} \mathrm{softplus}(g_c(\bar{x})) \\
+    &\quad + \sum_{c \in C_{\text{top}=}} \mathrm{softplus}\!\big(\min(h_c(\bar{x}), -h_c(\bar{x}))\big) \\
+    &\quad + \text{non-degeneracy terms}
+    \end{aligned}
+    $$
+
+    <p>
+      여기서 non-degeneracy 항은 <em>모든 점이 한 점에 뭉치지 않게</em>,  
+      <em>모든 거리 $|AB|$가 0에 가까워지지 않게</em> 만드는 역할을 한다.  
+      이 손실을 두고 Adam으로 여러 초기값에 대해 동시에 최적화를 돌린 뒤,  
+      오차가 충분히 작고 위상 제약을 모두 만족하는 후보만 남긴다.  
+      마지막으로 Gauss–Newton–Levenberg 방법을 써서  
+      과결정/미결정 비선형 방정식 시스템의 해를 더 정밀하게 찾는다.
+    </p>
+
+    <p>
+      이 3단계 프로시저를 <em>실패하면 초기화부터 다시</em> 반복 실행하여,  
+      IMO 2000–2024에서 AG 언어로 형식화된 44개 기하 문제 중 43개에 대해  
+      1시간 안에 유효한 다이어그램을 자동 생성한다.  
+      즉, <strong>“문제 이해 → 형식화 → 다이어그램 생성”만으로도 이미 하나의 거대 알고리즘</strong>이다.
+    </p>
+  </div>
+
+  이런 파이프라인은 AIME 스타일의  
+  “$(x + 1/x)^2$ 한 번, $(x + 1/x)^3$ 한 번 전개해서 $322$ 뽑기” 같은  
+  <strong>패턴 반복 → 수치 산출 루틴</strong>과는 차원이 다르다.  
+  증명형 과제에서 AI가 해야 하는 일은,  
+  <em>정답을 계산하는 것</em>이 아니라 <em>문제 전체를 계산 가능한 구조로 재구성하는 것</em>에 가깝다.
+</li>
+
+
+      <li><strong>연구 문제(예: 리만가설)</strong>: 정답도, 중간 채점 신호도 없다.  
+        “어떤 개념을 세워야 장벽이 무너지는가?” 자체가 문제의 핵심이다.  
+        정수 한 개 뽑아내는 작업과는 차원이 다르다.
+      </li>
+    </ul>
+
+    <p class="callout">
+      <strong>요지:</strong> 같은 “수학”이라도 <em>산출물의 성격</em>이 다르면  
+      AI의 강·약점은 완전히 달라진다.  
+      숫자는 폭주기관차처럼 잘 맞히지만, 논증은 여전히 ‘생각의 근육’을 요구한다.
+    </p>
+
+
+    <h2 id="three-engines">2) 정답형을 밀어 올린 세 가지 엔진</h2>
+
+    <h3>2-1. 도구 사용: 계산은 내가 안 한다, 기계가 한다</h3>
+    <p>
+      현대 LLM의 기본 태도는 이렇다:  
+      <strong>“긴 계산? 내가 왜 해? 코드로 던지면 파이썬이 해주는데?”</strong>  
+      그래서 중간 추론을 자연어로 끄적이지도 않는다.  
+      그냥 <em>Program-of-Thought</em> 방식으로  
+      복잡한 산술·대수 계산은 통째로 외부 계산기(CAS, Python)에 아웃소싱한다.
+    </p>
+    <p>
+      이러면 모델이 할 일은 훨씬 단순해진다.  
+      “무슨 계산을 해야 하는가”만 알아내면 되고,  
+      실제 숫자 굴리는 건 전부 외부 도구가 처리한다.  
+      계산이 지저분하면 지저분할수록  
+      <strong>“계산 외주 전략”</strong>의 상대적 이득이 폭발한다.
+    </p>
+
+    <h3>2-2. 탐색: 한 방에 못 풀면 일단 갈래를 뻗는다</h3>
+    <p>
+      <strong>Tree-of-Thoughts(ToT)</strong>는  
+      “한 번에 정답 나와라”라는 순진한 기대를 버리고,  
+      <strong>“가능한 루트 다 깔아봐!”</strong> 모드로 작동한다.
+    </p>
+    <p>
+      모델은 여러 후보 생각(thought)을 동시에 전개하고,  
+      중간에 이상한 루트는 컷하고,  
+      괜찮아 보이는 루트만 계속 키운다.  
+      말하자면 <strong>브랜치·프루닝 기반의 야생적 백트래킹</strong>이다.
+    </p>
+    <p>
+      이 방식이 좋은 이유는 단순하다.  
+      인간도 어려운 퍼즐을 풀 때  
+      “이 길? 아님 저 길? 아님 잠깐 돌아가자?”  
+      이런 식으로 한다.  
+      AI도 똑같이 한다. 대신 스케일이 미쳤다.
+    </p>
+
+    <h3>2-3. 합의 디코딩: 여러 번 떠들게 해서 제일 덜 이상한 답 뽑기</h3>
+    <p>
+      <strong>Self-Consistency</strong>는  
+      <strong>“AI가 한 번 말하면 뻘소리도 섞이니까 여러 번 말하게 하자”</strong>라는 철학에서 출발한다.  
+      같은 문제를 수십 번 풀게 하고,  
+      가장 자주 등장하거나 가장 논리적으로 정렬된 답을 선택한다.
+    </p>
+    <p>
+      이건 그냥 다수결이 아니라  
+      <em>AI의 환각을 통계적으로 평균해 제거하는 장치</em>다.  
+      한 번의 CoT가 헛소리면?  
+      <strong>여러 번 시키면 그나마 정상값이 떠오른다.</strong>
+    </p>
+
+    <p class="callout">
+      <em>정리:</em>  
+      계산은 외주 → 탐색은 가지치기 → 답은 다수결.  
+      이 세 가지가 합쳐지는 순간,  
+      AIME 같은 정답형 문제는  
+      <strong>AI 입장에서 난이도 급락</strong>이다.  
+      인간은 “와 잘 푼다”라고 놀라지만,  
+      AI 쪽에서는 그냥 <em>루틴 3종 세트가 잘 돌아간 것뿐</em>이다.
+    </p>
+
+
+    <h2 id="riemann">3) 그런데 왜 리만가설은 못 푸나?</h2>
+    <ol>
+      <li>
+        <strong>정답형 vs 증명형의 본질 차이</strong> —  
+        AIME는 사실 함수 하나다.  
+        $$ f_{\text{AIME}}: \text{문제 텍스트} \;\longrightarrow\; \{0,\dots,999\} $$
+        이 값만 맞히면 게임 끝이다. 여기서 모델이 학습하는 건 사실상 “문제 텍스트 → 정수”로 가는 거대한 통계적 lookup function이다.
+        반대로 리만가설은 “$\zeta(s)$의 비자명한 영점이 다 $\Re(s)=1/2$ 위에 있다”를  
+        <em>모든 $s$에 대해</em> 논리적으로 밀어붙이는 전역 명제다.  
+        여기서는
+        $$ \text{아이디어} \;\Rightarrow\; \text{보조정리} \;\Rightarrow\; \text{전체 구조} $$
+        같은 <strong>논증 레벨의 설계도</strong>가 필요하다.  
+        한 줄짜리 숫자 정답만 알고 있어서는, 진짜 수학 논문 입장에선 <em>단 한 줄도 진도가 안 나간다</em>.
+      </li>
+
+      <li>
+        <strong>탐색 공간과 보상 희소성</strong> —  
+        AIME는 “맞았냐/틀렸냐”가 바로바로 나온다.  
+        반면 리만가설 같은 건, 열심히 계산하고 정리 세우다가도  
+        <strong>“이 방향이 맞는 건지”</strong> 신호가 안 온다.  
+        증명 탐색은 조합 폭발적인 데다 중간 보상이 거의 없어서,  
+        강화학습이든 샘플링이든 <em>길 잘못 들면 끝까지 쭉 버리는 수가 많다</em>.  
+        그냥 거대한 미궁에 들어가서 “아마 여기쯤인가?” 감으로 헤매는 수준.
+      </li>
+
+      <li>
+        <strong>형식화 병목</strong> —  
+        모델이 머릿속(?)에서 “그럴듯한 아이디어”를 떠올렸다 쳐도,  
+        그걸 Lean/Isabelle 같은 형식 체계로 옮겨서
+        $$ \Gamma \vdash \varphi $$
+        꼴의 엄밀한 증명으로 만드는 건 <strong>완전 다른 일</strong>이다.  
+        자연어 문장 → 형식 논리식으로 옮기는 과정에서  
+        전제 누락, 기호 선택 미스, 라이브러리에 없는 정리 호출 등이 왕창 터진다.  
+        결과적으로 <em>“생각했다”와 “검증됐다” 사이에 깊은 골짜기</em>가 있고,  
+        지금 LLM은 그 골짜기에서 자주 미끄러진다.
+      </li>
+
+      <li>
+        <strong>평가의 부재</strong> —  
+        미해결 난제는 정답도 없고 모범답안도 없다.  
+        “이 방향이 유망하다”는 라벨 데이터가 없으니  
+        학습 관점에서 보면 <strong>극악의 RL 환경</strong>인 셈이다.  
+        AIME처럼 “여기까지 맞았으니까 부분점수 5점” 이런 것도 없고,  
+        그냥 열심히 파다가도 “이게 좋은 아이디어인지” 아무도 보상 신호를 안 준다.
+      </li>
+
+      <li>
+        <strong>개념 생성의 난이도</strong> —  
+        난제는 보통 기존 정리들을 예쁘게 쌓아 올리는 수준이 아니라,  
+        아예 게임판을 갈아엎는 <em>새 개념·새 표상</em>을 요구한다.  
+        함수해석학, 스킴, 모티브, 카테고리 이론 같은 것들이 다 그런 “판 바꾸기”의 결과물이다.  
+        그런데 LLM은 기본적으로 <strong>기존 코퍼스 재조합 머신</strong>이라,  
+        완전 새로운 개념을 발명해내는 데서는 반복적으로 벽에 막힌다.
+      </li>
+    </ol>
+
+    <h2 id="formalization">4) “증명”은 문장만 쓰는 게 아니다 — 형식 증명 파이프라인</h2>
+    <p>
+      인간 수학자도 증명을 한 번에 쓰지 않는다.  
+      보통은 대충 스케치하고, 거기서 논리 구멍을 메우고,  
+      마지막에야 괜찮은 버전을 논문 형식으로 다듬는다.
+    </p>
+    <p>
+      LLM 기반 파이프라인도 구조는 비슷하다:
+      <strong>스케치(비형식) → 형식화(Lean/Isabelle) → 자동 증명기 탐색</strong>.  
+      하지만 각 단계가 전부 사고 체조를 요구한다.
+    </p>
+    <ul>
+      <li>
+        <strong>스케치</strong>:  
+        “아마 이런 보조정리 하나 세우고, 저기서 유사삼각형 쓰고,  
+        끝에 가서 모순 내면 될 듯?” 같은 <em>거친 전략 수준</em> 아이디어.
+      </li>
+      <li>
+        <strong>형식화</strong>:  
+        이 스케치를 실제 라이브러리 안에 있는 정의·정리로 재매핑해야 한다.  
+        적당한 정리를 골라 쓰려면 “라이브러리에 뭐가 있는지”를 알아야 하고,  
+        안 맞으면 새 정리까지 세워야 한다.
+      </li>
+      <li>
+        <strong>자동 증명기 탐색</strong>:  
+        정형화된 목표를 놓고, Sledgehammer든, HTPS든,  
+        각종 자동 증명기가 <em>검색·백트래킹·휴리스틱</em>으로 잔업을 수행한다.
+      </li>
+    </ul>
+    <p>
+      요약하면 지금 상황은 이렇다:  
+      <strong>“검산기(자동 증명기)는 점점 괴물이 되어 가는데,  
+      거기에 던져줄 제대로 된 초안(proof sketch)을 꾸준히 찍어내는 능력”</strong>은  
+      아직 LLM 쪽이 한참 부족하다.  
+      즉, 계산·검증 파이프라인은 제법 세팅됐지만,  
+      <em>그 안에 넣어줄 진짜 수학적 아이디어</em>가 아직 많이 모자란 상태다.
+    </p>
+
+
+    <h2 id="eval-hygiene">5) 평가의 함정과 위생 — 숫자만 보고 흥분하지 말 것</h2>
+    <ul>
+      <li><strong>데이터 누수</strong>: 공개 문제 재활용/유사 문제 오염 가능성.</li>
+      <li><strong>분포 이동</strong>: 훈련/평가 분포가 다르면 성능이 급락한다.</li>
+      <li><strong>실전형 대안</strong>: “출제 직후 평가”, “증명형 채점 강화”, “도구 제한/허용의 명시”.</li>
+    </ul>
+
+    <p>
+      여기는 주로 <em>벤치마크 설계자</em> 입장에서의 얘기고,  
+      <em>실제 사용자</em> 입장에서는 더 직설적인 함정이 있다:
+      <strong>“AI가 너무 그럴듯하게 떠들어서, 검산도 안 하고 그냥 믿어버리는 것”</strong>.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">⚠️ 진짜 수학처럼 보이는데 틀린 AI 답안 예시</div>
+
+      <strong>문제</strong>  
+      <p>
+        $$ 
+        \begin{aligned}
+          &\text{연속함수 } f_n : [0,1] \to \mathbb{R} \text{ 가 있고, 각 } x \in [0,1] \text{에 대해 } 
+          f_n(x) \to f(x) 
+           \\
+          & \text{이때 } f \text{도 연속이라는 것을 보여라.}
+        \end{aligned}
+        $$ 
+    
+      </p>
+
+      <p>
+        <strong>AI가 실제로 자주 내놓는 “그럴듯한” 답안 구조</strong>
+      </p>
+
+      <p>
+        1. 각 $f_n$은 연속이므로, 임의의 $x_0$와 $\varepsilon &gt; 0$에 대해  
+        적당한 $\delta_n$이 존재하여 $|x - x_0| &lt; \delta_n$이면  
+        $$ |f_n(x) - f_n(x_0)| &lt; \varepsilon/3 $$  
+        이 성립한다.
+      </p>
+
+      <p>
+        2. 또 $f_n(x_0) \to f(x_0)$, $f_n(x) \to f(x)$ 이므로,  
+        충분히 큰 $n$에 대해
+        $$ |f_n(x_0) - f(x_0)| &lt; \varepsilon/3, \quad |f_n(x) - f(x)| &lt; \varepsilon/3 $$  
+        을 동시에 만족한다고 쓴다.
+      </p>
+
+      <p>
+        3. 따라서
+        $$
+          |f(x) - f(x_0)| 
+          \le |f(x) - f_n(x)| + |f_n(x) - f_n(x_0)| + |f_n(x_0) - f(x_0)| 
+          &lt; \varepsilon
+        $$
+        이 되고, 연속성의 $\varepsilon$–$\delta$ 정의가 만족되므로  
+        $f$는 연속이라고 결론 내린다.  
+        <strong>QED ✍️ (라고 자신 있게 끝낸다)</strong>
+      </p>
+
+      <p class="ginzabox-note">
+        문제는 이 “증명”이 <em>틀렸다</em>는 거다.  
+        핵심 구멍은 2번–3번에서 쓰인 “충분히 큰 $n$”과 “적당한 $\delta_n$”이  
+        <strong>$n$과 상관없이 하나의 $\delta$로 통일되어야 하는데, 그게 전혀 보장되지 않는다</strong>는 점이다.  
+        즉, $n$마다 다른 $\delta_n$을 쓰면서, 마치 <em>하나의</em> $\delta$가 존재하는 것처럼  
+        슬쩍 바꿔치기했다.
+      </p>
+
+      <p>
+        실제로는 반례가 간단히 존재한다.  
+        $$ f_n(x) = x^n, \quad x \in [0,1] $$  
+        을 생각하면, 각 $f_n$은 $[0,1]$에서 연속이지만,  
+        점별 극한 $f$는
+        $$
+          f(x) =
+          \begin{cases}
+            0, & 0 \le x &lt; 1 \\
+            1, & x = 1
+          \end{cases}
+        $$
+        이라서 $x=1$에서 연속이 아니다.
+      </p>
+
+      <p class="ginzabox-note">
+        이게 왜 무섭냐면,  
+        위 “가짜 증명”은 수학과 학부생 기준으로도 얼핏 보면 그럴듯하고,  
+        AI는 여기에 <em>“연속함수의 극한은 연속이다는 것은 고전적인 사실이다”</em> 같은 멘트까지 얹어서  
+        신뢰감을 뻥튀기한다.  
+        <strong>하지만 핵심 조건(균등수렴)이 빠져 있어서, 내용 자체가 틀린 주장</strong>이다.  
+        숫자 맞추기 벤치마크에선 티가 안 나지만,  
+        이런 증명형 작업에서 “그럴듯함=진실” 로 착각하면 큰일나는 지점이다.
+      </p>
+    </div>
+
+    <p class="callout">
+      <strong>해석 주의:</strong> AIME 고득점은 “숫자 맞히기” 능력의 신뢰할 신호이지만,  
+      개별 답안의 <em>논리적 안전성</em>이나 <em>정리의 진위 여부</em>를 보증해 주진 않는다.  
+      <strong>AI가 쓴 증명에는, 겉으로는 유창하지만 핵심 가정 하나가 통째로 빠진 경우가 일상적</strong>이다.
+    </p>
+
+
+
+    <h2 id="next">6) 다음 브레이크스루의 조건</h2>
+    <ol>
+      <li><strong>장기 탐색 예산</strong> —
+        한 문제에 긴 호흡으로 매달리는 <em>persistent planning</em>과 실패 회수 관리.</li>
+      <li><strong>개념 생성 훈련</strong> —
+        기존 정리 조합이 아닌, <em>새 정의/표상</em>을 보상하는 데이터·학습 환경.</li>
+      <li><strong>형식화 보조</strong> —
+        자연어–형식어 간 자동 대응(정리 검색·정합성 체크·전제 보강) 도구의 고도화.</li>
+      <li><strong>지식 라이브러리 내재화</strong> —
+        대형 정리/증명 스크립트의 <em>탐색 친화적</em> 인덱싱과 참조 메모리.</li>
+      <li><strong>도구 생태계의 표준화</strong> —
+        수치계산(CAS), 정리조사, 증명기(Lean/Isabelle)까지 <em>파이프라인 결속</em>.</li>
+      <li><strong>평가 설계</strong> —
+        데이터 누수를 피하고, 중간 산출물(스케치·보조정리)에도 점수를 주는 루브릭.</li>
+    </ol>
+
+    <hr/>
+
+    <aside class="summary">
+      <strong>한 줄 요약:</strong>
+      <em>도구·탐색·합의</em>가 정답형 수학을 평정했지만,
+      <em>개념 생성·형식화·장기 탐색</em>이 필요한 증명/연구 문제는 아직 먼 길이다.
+      즉, 지금 AI는 “검산기+도구 생태계”는 꽤 괜찮게 깔았는데,  
+      그 위에 올릴 <strong>진짜 연구용 ‘아이디어 엔진’</strong>은 아직 베타 버전인 셈이다.
+    </aside>
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋 
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

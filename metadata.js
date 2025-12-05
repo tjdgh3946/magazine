@@ -98,5 +98,19 @@ window.imageData = [
     ],
     "title": "DP in Bayesian perspective",
     "message": "출력 y 하나 보고도 공격자가 멍청해지는 이유 🤷‍♂️👯‍♂️"
+  },
+  {
+    "date": "2025-12-05",
+    "filename": "thumbnail/2025-ai-ciE0zx1pG6A.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-wet-city-street-at-night-with-people-walking-by-ciE0zx1pG6A",
+    "styleHint": "tokyo",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "math",
+      "AI"
+    ],
+    "title": "2025 AI 수학 능력과 한계",
+    "message": "AIME는 찢는데… 리만가설 앞에서는 바보됨 😂"
   }
 ];
