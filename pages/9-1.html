@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+        <section class="title-box">
+    <h1>Linear programming 하나 풀어보자</h1>
+
+    <p class="dek">
+      “LP는 그냥 솔버에 던지면 되지 않나?” 싶지만,
+      한 번만 손으로 듀얼/KKT까지 찢어보면 구조가 눈에 박힌다.
+      오늘은 확률분포를 변수로 두는(=무한차원처럼 보이지만 사실은 그냥 LP인) 예제로
+      <strong>듀얼이 왜 ‘직선 덮기(upper hull)’가 되는지</strong>,
+      그리고 <strong>KKT에서 영양가가 CS로 몰리는 이유</strong>까지 한 번에 정리한다.
+    </p>
+
+    <div class="date">22 Dec 2025</div>
+  </section>
+
+  <article class="body">
+
+    <p>
+      목표는 간단하다. $i\in\{0,1,\dots,m\}$ 위에서 확률분포 $p=(p_0,\dots,p_m)$를 고르되,
+      평균(모멘트) 제약이 있을 때 어떤 선형 목적을 최대화한다.
+      겉보기엔 확률 얘기지만, 실체는 <strong>선형계획(LP)</strong>이다.
+    </p>
+
+    <hr/>
+
+    <h2 id="primal">1) Primal: “분포를 골라 기대값 최대화”</h2>
+
+    <p>
+      다음을 상수로 두자:
+      $$a_i := \mathbb{P}_{\tilde W}\big[\tilde W(t)\ge v-i\big]\quad (i=0,\dots,m).$$
+      우리가 선택하는 변수는 $p_i=\mathbb{P}[F(t)=i]$ (즉, 분포 자체)다.
+    </p>
+      프라이멀(primal) 문제는:
+    <p>
+      <div class="ginzabox">
+      $$\begin{aligned}
+      \max_{p}\quad & \sum_{i=0}^m a_i\,p_i \\
+      \text{s.t.}\quad & \sum_{i=0}^m i\,p_i \le 2m\delta, \\
+      & \sum_{i=0}^m p_i = 1, \\
+      & p_i \ge 0\quad \forall i.
+      \end{aligned}$$
+      </div>
+       이건 “평균이 $2m\delta$ 이하인 분포들 중에서 $\mathbb{E}[a_I]$를 최대화”라는 뜻이다.
+    </p>
+
+    <p>
+      여기서 이미 냄새가 난다. 목적과 제약이 전부 선형이므로,
+      최적해는 대개 <strong>몇 개의 점에만 질량이 몰린(sparse support)</strong> 분포로 나온다.
+      (모멘트 제약 1개면 보통 2점 지지집합으로 끝난다.)
+    </p>
+
+    <hr/>
+
+    <h2 id="dual">2) Dual: “직선 하나로 모든 점 위를 덮어라”</h2>
+
+    <p>
+      듀얼을 만들 때 승수는 다음처럼 둔다:
+      평균 제약에 $\alpha\ge 0$, 정규화 제약에 $\beta\in\mathbb{R}$.
+      (비음수 제약 $p_i\ge 0$는 KKT에서 $\lambda_i\ge 0$로 처리하거나,
+      듀얼 제약으로 흡수하는 방식 둘 다 가능하다.)
+    </p>
+
+    <p>
+      듀얼은 다음 꼴로 정리된다:
+      $$\begin{aligned}
+      \min_{\alpha,\beta}\quad & 2m\delta\,\alpha + \beta \\
+      \text{s.t.}\quad & \alpha i + \beta \ge a_i \quad \forall i=0,\dots,m, \\
+      & \alpha \ge 0.
+      \end{aligned}$$
+    </p>
+
+    <p>
+      이걸 기하학적으로 보면 끝난다.
+      점들 $(i,a_i)$ 위에 <strong>기울기 $\alpha\ge 0$인 직선 $y=\alpha i+\beta$</strong>를 하나 그어서,
+      모든 점을 <strong>위에서 덮고</strong>, 그 비용 $2m\delta\,\alpha+\beta$를 최소화하는 문제다.
+    </p>
+
+    <hr/>
+
+    <h2 id="why-beta-first">3) 왜 $\beta$를 먼저 “고정”하는가?</h2>
+
+    <p>
+      듀얼 제약 중 $i=0$만 따로 보면:
+      $$\beta \ge a_0.$$
+      여기서 $a_0=\mathbb{P}_{\tilde W}[\tilde W(t)\ge v]$다.
+      목적함수는 $\beta$에 대해 단조 증가하므로,
+      최적해에선 무조건
+      $$\beta^{*}=a_0$$
+      로 <strong>딱 붙는다</strong>.
+      이건 “선택”이 아니라 “아니면 손해”라서 자동이다.
+    </p>
+
+    <p>
+      반면 $\alpha$는 $i\ge 1$ 제약들이 정한다.
+      $$\alpha i + \beta \ge a_i \;\;\Longleftrightarrow\;\; \alpha \ge \frac{a_i-\beta}{i}\quad(i\ge 1).$$
+      따라서
+      $$\alpha^{*}=\max\Big\{0,\max_{i\ge 1}\frac{a_i-\beta^*}{i}\Big\}.$$
+      중요한 포인트: <strong>$\alpha$를 키우면 제약은 더 잘 만족</strong>하지만,
+      목적함수 $2m\delta\,\alpha+\beta$가 증가하므로 <strong>필요 최소만</strong> 취한다.
+    </p>
+
+    <hr/>
+
+    <h2 id="kkt">4) KKT 복습: 여기서 “영양가”는 CS에 몰린다</h2>
+
+    <p>
+      LP류 문제는 stationarity가 대체로 <em>듀얼 feasibility를 재진술</em>하는 경우가 많고,
+      해의 구조는 complementary slackness(CS)가 결정한다.
+      이 문제도 딱 그렇다.
+    </p>
+
+    <p>
+      (i) primal feasibility:
+      $$p_i\ge 0,\quad \sum_i p_i=1,\quad \sum_i i p_i\le 2m\delta.$$
+      (ii) dual feasibility:
+      $$\alpha\ge 0,\quad \alpha i+\beta\ge a_i\;\forall i.$$
+    </p>
+
+    <p>
+      (iii) complementary slackness는 두 종류다.
+      평균 제약과 $\alpha$:
+      $$\alpha\Big(2m\delta-\sum_i i p_i\Big)=0.$$
+      비음수 제약과 $\lambda_i$:
+      $$\lambda_i p_i=0\quad \forall i.$$
+    </p>
+
+    <p>
+      stationarity는
+      $$\lambda_i=\alpha i+\beta-a_i$$
+      를 주고, 이를 $\lambda_i p_i=0$와 합치면 제일 맛있는 결론이 나온다:
+      $$p_i>0\quad\Rightarrow\quad \alpha i+\beta=a_i.$$
+      즉, <strong>질량은 직선이 실제로 “닿는” 지점들에만 남는다.</strong>
+    </p>
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

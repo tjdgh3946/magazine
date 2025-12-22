@@ -107,23 +107,23 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
-      "리만가설 앞에서는 바보됨 😂math",
+      "math",
       "AI"
     ],
     "title": "2025 AI 수학 능력과 한계",
-    "message": "AIME는 찢는데…"
+    "message": "AIME는 찢는데… 리만가설 앞에서는 바보됨 😂"
   },
   {
-    "date": "2025-12-05",
-    "filename": "thumbnail/ai-in-2025-and-limitations-j1rORUDU_as.jpg",
-    "sourceURL": "https://unsplash.com/photos/japanese-street-at-night-with-illuminated-signs-j1rORUDU_as",
-    "styleHint": "tokyo",
+    "date": "2025-12-22",
+    "filename": "thumbnail/slide-Lfh0wUAJXpA.jpg",
+    "sourceURL": "https://unsplash.com/photos/people-walking-on-street-during-night-time-Lfh0wUAJXpA",
+    "styleHint": "japan",
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
       "keyword"
     ],
-    "title": "AI in 2025 and limitations",
+    "title": "",
     "message": ""
   }
 ];

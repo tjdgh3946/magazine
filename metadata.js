@@ -112,5 +112,18 @@ window.imageData = [
     ],
     "title": "2025 AI 수학 능력과 한계",
     "message": "AIME는 찢는데… 리만가설 앞에서는 바보됨 😂"
+  },
+  {
+    "date": "2025-12-22",
+    "filename": "thumbnail/slide-Lfh0wUAJXpA.jpg",
+    "sourceURL": "https://unsplash.com/photos/people-walking-on-street-during-night-time-Lfh0wUAJXpA",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "LP", "Privacy"
+    ],
+    "title": "LP 하나만 풀어보자",
+    "message": "아 이거 보다가 시간 다 갔네 🤡⏰"
   }
 ];
