@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <section class="title-box">
+    <h1>LP / Dual / KKT를 한 번에 찢기</h1>
+
+    <p class="dek">
+      “LP는 그냥 솔버에 던지면 끝” 같지만,
+      손으로 한 번만 뜯어보면 <strong>심플렉스 = active set</strong>,
+      <strong>듀얼 = 가격표(벌금표)</strong>,
+      <strong>reduced cost = 꿀통 탐지기</strong>가 한 번에 눈에 박힌다.
+      오늘은 <strong>왜 $y^\top=c_B^\top A_B^{-1}$가 듀얼로 튀어나오는지</strong>,
+      그리고 <strong>왜 최적성 체크가 reduced cost 부호 하나로 끝나는지</strong>를 정리한다.
+    </p>
+
+    <div class="date">23 Dec 2025</div>
+  </section>
+
+  <article class="body">
+
+    <p>
+      오늘의 핵심 세계관은 딱 두 개다.
+      (i) <strong>합법 세상(Primal)</strong>: 법(제약) 어기면 입장컷.
+      (ii) <strong>벌금 세상(Lagrangian/Dual)</strong>: 어겨도 뛰긴 뛰는데 돈 뜯김(듀얼 변수/승수).
+      그리고 최적점은 “<strong>더 벌고 싶은 방향으로 가면 벌금 때문에 총합이 손해</strong>”인 지점이다.
+    </p>
+
+    <hr/>
+
+    <h2 id="setup">0) 표준형 LP 셋업</h2>
+
+    <p>
+      최대화 표준형으로 간다:
+      $$\max\ c^\top x \quad \text{s.t. } Ax=b,\ x\ge 0.$$
+      여기서 $x$는 “활동량/생산량”, $b$는 “자원 한도”, $A$는 “활동이 자원 얼마나 먹는지”다.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">천박 번역</div>
+      <p>
+        <strong>Primal</strong>: “자원 한도($Ax=b$) 안에서, 활동량($x\ge0$) 굴려서 돈($c^\top x$) 최대.”
+        <br/>
+        <strong>Dual</strong>: “자원에 가격표($y$) 매겨서, 어떤 활동도 꿀통(순이익 양수) 못 만들게 막기.”
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="primal-dual">1) Primal vs Dual: 합법 세상 vs 벌금 세상</h2>
+
+    <p>
+      위 primal의 듀얼은:
+      $$\min\ b^\top y \quad \text{s.t. } A^\top y \ge c.$$
+      $y$는 각 제약(자원)에 붙는 “그림자 가격(shadow price)”다.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">Dual feasibility = 꿀통 금지</div>
+      <p>
+        듀얼 제약 $A^\top y \ge c$는 성분별로
+        $$A_j^\top y \ge c_j \quad (\forall j)$$
+        를 뜻한다.
+        <br/>
+        한눈에: “활동 $j$가 벌어오는 돈 $c_j$보다,
+        그 활동이 잡아먹는 자원을 가격표로 환산한 원가 $A_j^\top y$가 싸면 안 된다.”
+        싸면 기업이 그 활동만 무한정 돌려서 꿀 빨아버린다.
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="lagrangian">2) 벌금 세상(라그랑지안)과 KKT 감각</h2>
+
+    <p>
+      벌금(제약 위반 비용) 붙인 세계를 만들면:
+      $$\mathcal{L}(x,y)=c^\top x + y^\top (b-Ax).$$
+      (부호/형식은 표준형에 맞춘 형태; 핵심은 “제약을 가격표로 돈으로 환산”한다는 점이다.)
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">Stationarity 한 줄 번역</div>
+      <p>
+        최적점에서는 “<strong>돈 더 버는 방향으로 가면 벌금 때문에 총합이 손해</strong>”다.
+        수식으로는 (LP의 KKT 형태로) primal/dual/상보성이 동시에 성립한다.
+      </p>
+      <p style="text-align:center; font-weight:bold;">
+        $$
+        x\ge0,\quad A^\top y \ge c,\quad x_j\big(A_j^\top y-c_j\big)=0\ \ (\forall j).
+        $$
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="active-set">3) Active set: “진짜로 돈 뜯기는 놈들만 의미 있다”</h2>
+
+    <p>
+      부등식 제약 세계에서 핵심은 이거다:
+      <strong>활성(active) 제약</strong>은 경계에 붙어서($g_i(x)=0$) 너를 실제로 막는 놈이고,
+      <strong>$\lambda_i&gt;0$</strong>이면 그놈이 진짜로 돈 뜯는(반작용 힘을 내는) 상태다.
+      비활성($g_i(x)&lt;0$)이면 상보성 때문에 $\lambda_i=0$, 즉 “말만 법이고 존재감 0.”
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">Active set 알고리즘 = 목줄 갈아끼우기</div>
+      <p>
+        아이디어는 단순하다.
+        “지금 당장 너를 패는 놈(활성 제약)만 등식처럼 고정해서 풀고,
+        위반되면 새 놈을 영입, 필요 없으면 추방.”
+        LP에서는 이 철학의 대표선수가 <strong>심플렉스(Simplex)</strong>다.
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="simplex-dual">4) 왜 $y^\top=c_B^\top A_B^{-1}$가 듀얼로 튀어나오냐</h2>
+
+    <p>
+      심플렉스는 변수를 basic/nonbasic으로 쪼갠다.
+      $$A_B x_B + A_N x_N = b,\quad x_N=0 \Rightarrow x_B=A_B^{-1}b.$$
+      이때 목적값은
+      $$z=c^\top x=c_B^\top x_B=c_B^\top A_B^{-1}b.$$
+      여기서 자연스럽게
+      $$y^\top := c_B^\top A_B^{-1}$$
+      를 정의하면
+      $$z=y^\top b$$
+      가 된다. 이 $y$가 바로 “현재 basis(활성 집합) 기준으로 뽑힌 가격표(듀얼 변수)”다.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">그림자 가격 감각</div>
+      <p>
+        $z=y^\top b$이므로,
+        $$\frac{\partial z}{\partial b_i}=y_i.$$
+        한눈에: “자원 $i$를 1만큼 더 주면, 최대 수익이 $y_i$만큼 오른다.”
+        그래서 $y$를 그림자 가격이라 부른다.
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="reduced-cost">5) Reduced cost: “감옥에 있는 변수의 꿀통(순이익) 측정기”</h2>
+
+    <p>
+      nonbasic 변수 $x_j$를 감옥(0)에서 살짝 꺼내면,
+      $$x_B = A_B^{-1}(b-A_j x_j).$$
+      따라서 목적값 변화율(= edge 방향에서의 증가율)은
+      $$r_j := c_j - c_B^\top A_B^{-1}A_j = c_j - y^\top A_j.$$
+      이 $r_j$가 <strong>reduced cost</strong>다.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">Reduced cost = 듀얼 가능성(dual feasibility)과 동치</div>
+      <p>
+        듀얼 제약 $A^\top y \ge c$는 성분별로 $A_j^\top y \ge c_j$.
+        이는
+        $$r_j=c_j-y^\top A_j \le 0 \quad (\forall j)$$
+        와 같다.
+        <br/>
+        한눈에: “가격표 $y$ 아래에서 어떤 활동도 순이익(꿀통) 양수면 안 된다.”
+      </p>
+    </div>
+
+    <hr/>
+
+    <h2 id="optimality">6) 왜 최적성 체크가 “reduced cost 부호 하나”로 끝나냐</h2>
+
+    <p>
+      심플렉스에서 현재 꼭짓점은 $x_N=0$인 상태다.
+      이 자리에서 feasible하게 움직이는 길(edge)은 “감옥에 있는 nonbasic 하나를 꺼내는 방향”으로만 생긴다.
+      그때 목적 증가율이 바로 reduced cost $r_j$다.
+    </p>
+
+    <div class="ginzabox">
+      <div class="ginzabox-title">Optimality condition (최대화 기준)</div>
+      <p>
+        $$r_j \le 0\ \ (\forall j\in N)$$
+        이면 “돈 더 버는 탈출 루트가 없음”이므로 현재 해가 최적이다.
+        반대로 어떤 $r_j&gt;0$이 있으면,
+        그 변수는 꿀통이라서 들어오게(enter) 만들어 pivot 한다.
+      </p>
+    </div>
+
+    <p>
+      즉, 심플렉스는 매 스텝마다
+      (i) 가격표 $y$를 만들고,
+      (ii) 감옥 변수들의 $r_j$를 훑어서 꿀통($r_j&gt;0$)을 찾고,
+      (iii) active set(basis)을 한 놈 빼고 한 놈 넣는 pivot으로 갈아끼운다.
+      꿀통이 완전히 사라지면($r_j\le0$ 전부), 그게 끝(최적)이다.
+    </p>
+
+    <hr/>
+
+    <h2 id="takeaways">7) 오늘의 핵심 요약</h2>
+
+    <ul>
+      <li><strong>Primal(합법)</strong>: 법 어기면 입장컷.</li>
+      <li><strong>Dual(가격표/벌금)</strong>: 법 어겨도 뛰긴 뛰는데 돈 뜯김. 가격표가 구멍나면(꿀통) 나라 망함.</li>
+      <li><strong>Active set</strong>: 진짜로 너를 막는(돈 뜯는) 놈들만 의미 있음.</li>
+      <li><strong>$y^\top=c_B^\top A_B^{-1}$</strong>: 현재 active set 기준으로 튀어나온 “자원 가격표”.</li>
+      <li><strong>Reduced cost $r_j=c_j-y^\top A_j$</strong>: 감옥 변수의 순이익(꿀통) 측정기.</li>
+      <li><strong>Optimality</strong>: 감옥 전체에 꿀통이 0개면 끝. ($r_j\le0$ 전부)</li>
+    </ul>
+
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

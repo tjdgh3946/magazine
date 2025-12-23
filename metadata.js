@@ -88,7 +88,7 @@ window.imageData = [
   },
   {
     "date": "2025-12-04",
-    "filename": "thumbnail/dp-in-bayesian-perspective-4vX0gPy7IpM.jpg",
+    "filename": "thumbnail/ai-in-2025-and-limitations-j1rORUDU_as.jpg",
     "sourceURL": "https://unsplash.com/photos/a-label-on-a-sweater-that-says-zara-4vX0gPy7IpM",
     "styleHint": "zara",
     "imageCount": 1,
@@ -121,9 +121,28 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
-      "LP", "Privacy"
+      "LP",
+      "Privacy"
     ],
     "title": "LP 하나만 풀어보자",
     "message": "아 이거 보다가 시간 다 갔네 🤡⏰"
+  },
+  {
+    "date": "2025-12-23",
+    "filename": "thumbnail/slide-UkZvNWCM-XQ.jpg",
+    "sourceURL": "https://unsplash.com/photos/neon-signs-illuminate-a-dark-alleyway-at-night-UkZvNWCM-XQ",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "LP",
+      "Duality",
+      "KKT",
+      "Simplex",
+      "ActiveSet",
+      "ReducedCost"
+    ],
+    "title": "LP, 듀얼, 그리고 꿀통",
+    "message": "더 벌고 싶은 방향으로 가면 왜 갑자기 손해가 되는지… 알고 보니 다 reduced cost 때문이었네 🤯💸"
   }
 ];

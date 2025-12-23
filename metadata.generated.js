@@ -88,7 +88,7 @@ window.imageData = [
   },
   {
     "date": "2025-12-04",
-    "filename": "thumbnail/dp-in-bayesian-perspective-4vX0gPy7IpM.jpg",
+    "filename": "thumbnail/ai-in-2025-and-limitations-j1rORUDU_as.jpg",
     "sourceURL": "https://unsplash.com/photos/a-label-on-a-sweater-that-says-zara-4vX0gPy7IpM",
     "styleHint": "zara",
     "imageCount": 1,
@@ -117,6 +117,20 @@ window.imageData = [
     "date": "2025-12-22",
     "filename": "thumbnail/slide-Lfh0wUAJXpA.jpg",
     "sourceURL": "https://unsplash.com/photos/people-walking-on-street-during-night-time-Lfh0wUAJXpA",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "LP",
+      "Privacy"
+    ],
+    "title": "LP 하나만 풀어보자",
+    "message": "아 이거 보다가 시간 다 갔네 🤡⏰"
+  },
+  {
+    "date": "2025-12-23",
+    "filename": "thumbnail/slide-UkZvNWCM-XQ.jpg",
+    "sourceURL": "https://unsplash.com/photos/neon-signs-illuminate-a-dark-alleyway-at-night-UkZvNWCM-XQ",
     "styleHint": "japan",
     "imageCount": 1,
     "caption": "placeholder",
