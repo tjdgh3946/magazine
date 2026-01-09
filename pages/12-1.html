@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Schur Complement, 정보 뽑는 정산표</h1>
+        <p class="dek"></p>
+        <div class="date">09 Jan 2025</div>
+      </section>
+
+      <article class="body">
+       <p>
+    오늘의 주제는 <strong>Schur complement</strong>와 <strong>Mutual Information</strong>(MI)이다.
+    한 줄 세계관은 이거:
+    <strong>변수 하나 없애면(조건/제거/적분), 남은 세계는 Schur complement로 “정산”되고</strong>,
+    그 과정에서 <strong>불확실성의 부피(log-det)</strong>가 줄어든 만큼이
+    <strong>정보(MI)</strong>로 잡힌다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한눈에</div>
+    <p>
+      <strong>Schur complement</strong>: “관심 없는 변수 $y$를 없애고 나면,
+      $x$ 세계에 남는 정확한 흔적이 $A - BD^{-1}C$로 떨어진다.”
+      <br/>
+      <strong>Mutual Information</strong>: “관측을 알기 전/후로
+      불확실성 부피가 얼마나 줄었는지 = $\frac12\log\frac{\det\Sigma_0}{\det\Sigma_{\text{post}}}$.”
+      <br/>
+      결론: <strong>Schur로 정산하고, log-det로 부피 재고, 그 감소분이 MI다.</strong>
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="setup">0) 셋업: 블록 행렬과 변수 제거</h2>
+
+  <p>
+    블록 행렬(또는 연립방정식)은 실전에서 늘 이렇게 생긴다:
+    $$M=
+    \begin{pmatrix}
+      A & B \\
+      C & D
+    \end{pmatrix},\qquad
+    \begin{pmatrix}x\\y\end{pmatrix}\ \text{가 변수다.}$$
+    여기서 관심사는 보통 $x$이고, $y$는 “보조 변수/latent/관측 노이즈/내부 상태” 같은 역할이다.
+    그래서 목표는 단순하다: <strong>$y$를 없애고 $x$만 남기기</strong>.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">변수 제거 = 대입 한 번이면 끝</div>
+    <p>
+      연립식
+      $$\begin{cases}
+        Ax + By = f\\
+        Cx + Dy = g
+      \end{cases}$$
+      에서 $D$가 invertible이면
+      $$y=D^{-1}(g-Cx)$$
+      를 첫 식에 대입해서
+      $$(A - BD^{-1}C)x = f - BD^{-1}g$$
+      를 얻는다.
+      <br/>
+      여기서 <strong>$A - BD^{-1}C$</strong>가 바로 Schur complement다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="schur">1) Schur complement: “남은 세계의 정산표”</h2>
+
+  <p>
+    $D$가 invertible일 때, $D$에 대한 Schur complement를
+    $$S_{/D} = A - BD^{-1}C$$
+    로 정의한다. (대칭 블록이면 $C=B^T$라서 $S=A-BD^{-1}B^T$.)
+  </p>
+
+  <p>
+    <strong>$A$는 $x$의 직접 효과</strong>고,
+    <strong>$BD^{-1}C$는 $x\to y\to x$로 돌아오는 간접 효과</strong>다.
+    그래서 $y$를 제거하고 나면 $x$ 세계에서는
+    “직접 효과에서 간접 효과를 정산한” $S_{/D}$만 남는다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">왜 PSD가 보존되냐 (에너지로 보면 바로 끝)</div>
+    <p>
+      대칭 PSD 블록
+      $$\begin{pmatrix}
+        A & B\\
+        B^T & D
+      \end{pmatrix}\succeq 0,\quad D\succ 0$$
+      라고 하자.
+      임의의 $x$에 대해
+      $$\min_y\ \Bigl(x^TAx + 2x^TBy + y^TDy\Bigr)$$
+      를 보면 최적 $y^*=-D^{-1}B^Tx$가 나오고,
+      그때 최소값은
+      $$x^T(A-BD^{-1}B^T)x$$
+      로 떨어진다.
+      전체가 PSD면 최소값도 $\ge 0$이므로
+      $$A-BD^{-1}B^T\succeq 0.$$
+      즉, <strong>보조 변수를 “최적으로” 없애면 남은 세계도 안정적(PSD)이다.</strong>
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="gaussian">2) Gaussian에서 Schur complement는 “조건부 공분산”이다</h2>
+
+  <p>
+    가우시안에서 Schur complement는 눈에 잘 들어온다.
+    블록 가우시안
+    $$\begin{pmatrix}x\\y\end{pmatrix}
+      \sim \mathcal N\!\left(0,\;
+      \begin{pmatrix}
+        \Sigma_{xx} & \Sigma_{xy}\\
+        \Sigma_{yx} & \Sigma_{yy}
+      \end{pmatrix}\right)$$
+    를 생각하자.
+    이때 $y$를 “알고 있을 때”의 $x$ 공분산은
+    $$\Sigma_{x\mid y} = \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}$$
+    로 떨어진다.
+    <br/>
+    보이는 대로 <strong>Schur complement 그 자체</strong>다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한 줄 번역</div>
+    <p>
+      <strong>조건(관측)을 걸면</strong> $x$의 불확실성은
+      $$\Sigma_{xx}\ \to\ \Sigma_{x\mid y}$$
+      로 바뀐다.
+      그 차이는
+      $$\Sigma_{xx}-\Sigma_{x\mid y}=\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}\succeq 0$$
+      이라서 <strong>조건부는 항상 더 “조여진다”</strong>.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="mi">3) Mutual Information: “불확실성 부피가 줄어든 만큼”</h2>
+
+  <p>
+    Mutual Information은 정의부터가 “감소량”이다:
+    $$I(x;y)=H(x)-H(x\mid y).$$
+    가우시안에서
+    $$H(x)=\frac12\log\det(2\pi e\,\Sigma_x)$$
+    이므로, 상수항을 빼면 결국 <strong>log-det 차이</strong>로 떨어진다.
+  </p>
+
+  <p>
+    따라서 가우시안에서는
+    $$I(x;y)
+      =\frac12\log\frac{\det\Sigma_{xx}}{\det\Sigma_{x\mid y}}.$$
+    여기서 $\Sigma_{x\mid y}$가 Schur complement였으니,
+    <strong>Schur complement로 “조건부 공분산”을 만들고,
+    그 log-det 감소량을 재면 MI</strong>가 된다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">부피 관점 (log-det)</div>
+    <p>
+      $\det\Sigma$는 “공분산 타원”의 부피에 비례하고,
+      $\log\det\Sigma$는 그 로그다.
+      <br/>
+      관측을 알기 전의 부피 $\det\Sigma_{xx}$가
+      관측을 알고 난 후 $\det\Sigma_{x\mid y}$로 줄어든다.
+      <br/>
+      그래서
+      $$I(x;y)=\frac12\log\frac{\det\Sigma_{xx}}{\det\Sigma_{x\mid y}}$$
+      는 <strong>줄어든 부피의 로그</strong>로 딱 “정보량”이 된다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="linear-gaussian">4) 선형 관측 모델에서 MI가 한 줄로 떨어지는 이유</h2>
+
+  <p>
+    선형 가우시안 관측을 보자:
+    $$y = Hx + \varepsilon,\qquad \varepsilon\sim\mathcal N(0,R),\quad x\sim\mathcal N(0,\Sigma_0).$$
+    이때 posterior 공분산은 (Bayes + Woodbury로)
+    $$\Sigma_{\text{post}}
+      = \Sigma_0 - \Sigma_0H^T(R+H\Sigma_0H^T)^{-1}H\Sigma_0.$$
+  </p>
+
+  <p>
+    그리고 MI는 다음의 표준 형태로도 쓴다:
+    $$I(x;y)
+      =\frac12\log\det\bigl(I+H\Sigma_0H^TR^{-1}\bigr).$$
+    이 식은 “관측이 추가한 정보”가
+    <strong>$I+(\cdot)$</strong> 형태로 누적되고,
+    그 log-det이 <strong>총 정보량</strong>으로 측정된다는 뜻이다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">연결 고리</div>
+    <p>
+      <strong>Schur complement</strong>는 “조건부 공분산”을 만든다.
+      <br/>
+      <strong>log-det</strong>는 “불확실성 부피”를 잰다.
+      <br/>
+      <strong>MI</strong>는 “부피가 줄어든 만큼”이다.
+      <br/>
+      그래서 셋은 한 문장으로 묶인다:
+      <strong>조건을 걸고(Schur), 부피를 재서(log-det), 줄어든 만큼을 정보(MI)로 읽는다.</strong>
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="det-lemma">5) Matrix Determinant Lemma: log-det도 “작은 방”에서 계산된다</h2>
+
+  <p>
+    Schur complement가 변수 제거(조건부)를 “정산”해준다면,
+    determinant(부피) 쪽은 <strong>Matrix Determinant Lemma</strong>가 똑같이 정산해준다.
+    핵심은 이거다: <strong>det도 큰 놈을 직접 만지지 말고, 작은 놈으로 바꿔라.</strong>
+  </p>
+
+  <p>
+    일반형:
+    $$\det(A + UCV) = \det(C^{-1} + VA^{-1}U)\,\det(C)\,\det(A).$$
+    대칭형($V=U^T$)으로 자주 쓰는 꼴:
+    $$\det(A + UCU^T) = \det(C^{-1} + U^TA^{-1}U)\,\det(C)\,\det(A).$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한눈에: log-det 계산 루틴</div>
+    <p>
+      예를 들어 $A=D$ (쉽게 solve되는 행렬), $U=W$ (sparse), $C=K$ (dense)면
+      $$\log\det(D + WKW^T)
+        = \log\det D + \log\det K + \log\det(K^{-1} + W^TD^{-1}W).$$
+      여기서 진짜 부담되는 log-det은
+      $$\log\det(K^{-1} + W^TD^{-1}W)\in\mathbb{R}^{r\times r}$$
+      딱 이 작은 놈이다.
+    </p>
+  </div>
+
+  <p>
+    이게 왜 Schur complement/MI랑 맞물리냐면,
+    MI는 결국 “log-det 감소량”이라서 <strong>log-det을 싸게 계산</strong>할 수 있으면
+    <strong>정보량을 싸게 계산</strong>할 수 있기 때문이다.
+  </p>
+
+  <hr/>
+
+
+  <h2 id="active-learning">6) Active Learning / 센서 선택: “어디를 보면 정보가 제일 줄어드나”</h2>
+
+  <p>
+    실전에서는 MI를 이렇게 쓴다:
+    “관측 예산이 제한돼 있을 때, <strong>어떤 관측을 골라야 불확실성이 가장 많이 줄어드나?</strong>”
+    이게 센서 선택, 실험 설계, 액티브 러닝의 기본 질문이다.
+  </p>
+
+  <p>
+    관측 후보 집합이 있고, 그중 일부 $S$만 고른다면 목표는 보통 이런 꼴이다:
+    $$\max_{S}\ I(x; y_S)
+      \quad \Leftrightarrow \quad
+      \min_{S}\ \log\det(\Sigma_{x\mid y_S}).$$
+    즉, <strong>posterior 부피(log-det)를 제일 많이 줄이는 관측을 고른다</strong>.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">Greedy가 잘 먹히는 이유 (직관)</div>
+    <p>
+      MI는 “감소량”이라서,
+      관측을 하나 추가할 때의 증가분
+      $$\Delta I = I(x; y_{S\cup\{i\}}) - I(x; y_S)$$
+      을 계산해서 큰 놈부터 집는 그리디가 자주 쓰인다.
+      <br/>
+      관측이 서로 완전히 독립은 아니지만,
+      많은 설정에서 “추가할수록 이득이 줄어드는” 성질 때문에
+      그리디가 꽤 강력하게 동작한다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="subspace">7) 정보는 “보는 방향”에서만 줄어든다</h2>
+
+  <p>
+    Schur complement/조건부 업데이트의 중요한 포인트:
+    <strong>관측은 모든 방향을 줄이지 않는다.</strong>
+    관측이 실제로 닿는(보는) 부분공간에서만 불확실성이 줄고,
+    관측이 전혀 못 보는 방향은 그대로 남는다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한 줄로 말하면</div>
+    <p>
+      $H$가 못 보는 방향(즉, $Hx$가 변화하지 않는 방향)은
+      $$\Sigma_{\text{post}} \approx \Sigma_0$$
+      로 남는다.
+      반대로 $H$가 잘 보는 방향은
+      $$\Sigma_{\text{post}} \prec \Sigma_0$$
+      로 강하게 눌린다.
+      <br/>
+      그래서 MI는 “전체가 조금 좋아졌다”가 아니라,
+      <strong>관측이 잡아낸 축에서 부피가 얼마나 눌렸는지</strong>를 측정한다.
+    </p>
+  </div>
+
+  <hr/>
+  <h2 id="takeaways">8) 최종 치트 시트</h2>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">현업 암기 3줄</div>
+    <p>
+      (i) <strong>Schur complement</strong>: $y$ 없애면 $x$ 세계는 $A-BD^{-1}C$로 “정산”된다.
+      <br/>
+      (ii) <strong>조건부 가우시안</strong>: $\Sigma_{x\mid y}=\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}$ (Schur 그대로).
+      <br/>
+      (iii) <strong>Mutual Information</strong>:
+      $$I(x;y)=\frac12\log\frac{\det\Sigma_{xx}}{\det\Sigma_{x\mid y}}
+        =\frac12\log\det\bigl(I+H\Sigma_0H^TR^{-1}\bigr).$$
+    </p>
+  </div>
+
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

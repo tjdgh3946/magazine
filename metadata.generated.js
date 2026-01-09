@@ -153,6 +153,22 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
+      "woodbury",
+      "low-rank inverse",
+      "bayes update",
+      "inverse trick"
+    ],
+    "title": "Woodbury, 큰 inverse를 죽이는 작은 방",
+    "message": "n×n을 뒤집으려는 순간 인생이 망한다… inverse는 r차원에 가둬두고 샌드위치로 빼먹는 게 진짜 실전이었네 🤯🔪"
+  },
+  {
+    "date": "2026-01-09",
+    "filename": "thumbnail/slide-6FUNQS6a6_4.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-narrow-alley-with-lanterns-and-signs-on-the-sides-6FUNQS6a6_4",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
       "keyword"
     ],
     "title": "",
