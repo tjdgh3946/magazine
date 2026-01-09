@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGAZINE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Woodbury identity</h1>
+        <p class="dek"></p>
+        <div class="date">09 Jan 2026</div>
+      </section>
+
+      <article class="body">
+         <p>
+    오늘의 주제는 <strong>Woodbury identity</strong>다.
+    한 줄로 말하면 이거다:
+    <strong>큰 inverse를 하지 말고, 작은 inverse로 문제를 봉인한다.</strong>
+    특히 $D$는 쉽게 뒤집히고, $W$는 sparse, $K$는 dense(하지만 작다)일 때
+    <strong>(n을 무시하고 r만 패는)</strong> 계산이 가능해진다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한눈에</div>
+    <p>
+      <strong>직접 inverse</strong>: $n\times n$ 뒤집기 = 지갑/시간/정신 사망.
+      <br/>
+      <strong>Woodbury</strong>: “귀찮은 건 $r\times r$ 방에 가둬놓고, 밖은 가볍게 처리.”
+      <br/>
+      결론: <strong>A는 만들지 말고, $A^{-1}x$만 뽑아먹어라.</strong>
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="setup">0) 셋업: 우리가 다루는 꼴</h2>
+
+  <p>
+    우리가 씹어먹는 구조는 이거:
+    $$A = D + W K W^T.$$
+    여기서 $W\in\mathbb{R}^{n\times r}$는 <strong>sparse</strong>,
+    $K\in\mathbb{R}^{r\times r}$는 <strong>dense</strong>,
+    그리고 $D$는 보통 <strong>diagonal</strong> 혹은 쉽게 풀리는(쉽게 solve되는) 행렬이다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">왜 $+D$가 중요하냐</div>
+    <p>
+      $WKW^T$만 있으면 rank가 최대 $r$이라 보통 <strong>singular</strong>이라서 inverse가 없다.
+      그래서 현실에서는 $\sigma I$ 같은 <strong>정규화/노이즈</strong>가 붙는다:
+      $$A = \sigma I + WKW^T \quad \text{또는} \quad A = D + WKW^T.$$
+      이 순간부터 Woodbury가 <strong>실전 치트키</strong>가 된다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="identity">1) Woodbury identity: 샌드위치-마이너스 공식</h2>
+
+  <p>
+    일반형은 이렇게 생겼다:
+    $$(A + UCV)^{-1} = A^{-1} - A^{-1}U\,(C^{-1}+VA^{-1}U)^{-1}\,VA^{-1}.$$
+    자주 쓰는 대칭형($V=U^T$)이면:
+    $$(A + UCU^T)^{-1} = A^{-1} - A^{-1}U\,(C^{-1}+U^TA^{-1}U)^{-1}\,U^TA^{-1}.$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">암기법 (리듬)</div>
+    <p>
+      <strong>“기본 inverse − Ainv–U–smallinv–Uᵀ–Ainv”</strong>
+      <br/>
+      즉, <strong>양옆은 무조건 $A^{-1}$</strong>, 가운데만 작은 inverse.
+      <br/>
+      그리고 부호는 무조건 <strong>마이너스</strong>다: “추가된 걸 inverse에서는 깎는다.”
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="mapping">2) 우리 꼴에 매핑: $D+WKW^T$</h2>
+
+  <p>
+    위 공식을 다음처럼 대응시킨다:
+    $$A\leftarrow D,\quad U\leftarrow W,\quad C\leftarrow K,\quad V\leftarrow W^T.$$
+    그러면 바로:
+    $$(D + WKW^T)^{-1} = D^{-1} - D^{-1}W\,(K^{-1}+W^TD^{-1}W)^{-1}\,W^TD^{-1}.$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">핵심: inverse는 어디서 하냐?</div>
+    <p>
+      $n\times n$ inverse는 없다.
+      <br/>
+      진짜 inverse는 딱 하나:
+      $$\bigl(K^{-1}+W^TD^{-1}W\bigr)^{-1} \in \mathbb{R}^{r\times r}.$$
+      즉, <strong>지옥은 r차원 방 안에서만</strong> 일어난다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="solve">3) 실전 목표: $A^{-1}x$만 뽑아먹기</h2>
+
+  <p>
+    대부분 현실 문제는 $A^{-1}$ 그 자체가 아니라 <strong>$A^{-1}x$</strong>가 필요하다.
+    Woodbury를 “곱셈 형태”로 쓰면 계산 순서는 이렇다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">알고리즘: solve 루틴</div>
+    <p>
+      주어진 $x$에 대해 $y=A^{-1}x$를 구한다.
+      <br/><br/>
+      (1) $u = D^{-1}x$ <br/>
+      (2) $t = W^Tu$ <br/>
+      (3) $M = K^{-1}+W^TD^{-1}W$ <br/>
+      (4) $z = M^{-1}t$ <br/>
+      (5) $y = u - D^{-1}Wz$
+      <br/><br/>
+      포인트: $W$가 sparse라서 (2)(5)가 싸고, $M$은 $r\times r$라 (4)가 감당 가능하다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="bayes">4) Bayes 뽕: Woodbury = 관측 추가의 공분산 업데이트</h2>
+
+  <p>
+    가우시안 prior:
+    $$x\sim\mathcal{N}(\mu_0,\Sigma_0),$$
+    선형 관측:
+    $$y = Hx+\varepsilon,\quad \varepsilon\sim\mathcal{N}(0,R).$$
+    이때 posterior precision(정보)은 “더하기”로 업데이트된다:
+    $$\Sigma_{\text{post}}^{-1}=\Sigma_0^{-1}+H^TR^{-1}H.$$
+  </p>
+
+  <p>
+    근데 우리가 보통 필요한 건 covariance(역행렬)라서,
+    Woodbury로 뒤집으면 다음이 된다:
+    $$\Sigma_{\text{post}}
+      =\Sigma_0-\Sigma_0H^T\,(R+H\Sigma_0H^T)^{-1}\,H\Sigma_0.$$
+    이게 바로 “<strong>기본 공분산 − 관측으로 깎이는 PSD 보정항</strong>” 구조다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">Bayes 버전 주문</div>
+    <p>
+      <strong>“정보(precision)는 더하고(+), 불확실성(covariance)은 깎는다(−).”</strong>
+      <br/>
+      그리고 inverse는 보통 <strong>관측공간</strong>에서 한다:
+      $$\bigl(R+H\Sigma_0H^T\bigr)^{-1}\in\mathbb{R}^{m\times m}.$$
+      큰 $n$을 안 건드리고, 작은 $m$에서 해결하는 느낌이 Woodbury랑 완전 동일하다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="psd">5) 왜 posterior는 항상 더 작아지냐 (PSD로 한 방)</h2>
+
+  <p>
+    위 식에서 차이를 보자:
+    $$\Sigma_0-\Sigma_{\text{post}}
+      =\Sigma_0H^T\,(R+H\Sigma_0H^T)^{-1}\,H\Sigma_0.$$
+    이걸 이렇게 쓰면 더 노골적이다:
+    $$(H\Sigma_0)^T\,(R+H\Sigma_0H^T)^{-1}\,(H\Sigma_0).$$
+  </p>
+
+  <p>
+    $R\succ 0$이면 $(R+H\Sigma_0H^T)\succ 0$이므로,
+    위 항은 <strong>샌드위치 형태의 PSD</strong>다.
+    그래서:
+    $$\Sigma_0-\Sigma_{\text{post}}\succeq 0 \quad\Rightarrow\quad \Sigma_{\text{post}}\preceq \Sigma_0.$$
+    천박 결론: <strong>데이터는 불확실성을 늘릴 수 없다</strong> (늘었다면 모델/가정이 터진 거다).
+  </p>
+
+  <hr/>
+
+  <h2 id="takeaways">6) 최종 치트 시트</h2>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">현업 암기 3줄</div>
+    <p>
+      (i) <strong>부호는 −</strong> : 추가된 low-rank는 inverse에서 “깎는다”.
+      <br/>
+      (ii) <strong>양옆은 $D^{-1}$</strong> : $D^{-1}$로 샌드위치한다.
+      <br/>
+      (iii) <strong>inverse는 작은 데서</strong> :
+      $$\bigl(K^{-1}+W^TD^{-1}W\bigr)^{-1}\ \text{만 하면 된다.}$$
+    </p>
+  </div>
+
+    <br> 
+    
+  <h2 id="schur">Bonus A) Schur complement: Woodbury가 꼼수가 아닌 이유</h2>
+
+  <p>
+    Woodbury를 “마술 공식”처럼 외우기 싫으면,
+    사실 얘는 <strong>블록 행렬의 Schur complement</strong>에서
+    정직하게 튀어나온다는 걸 한 번만 보면 된다.
+    아래 블록 행렬을 보자:
+    $$M=
+    \begin{pmatrix}
+      D & W \\
+      W^T & -K^{-1}
+    \end{pmatrix}.$$
+  </p>
+
+  <p>
+    이때 아래쪽 블록 $-K^{-1}$의 Schur complement는:
+    $$S = D - W(-K)W^T = D + WKW^T.$$
+    즉, 우리가 뒤집고 싶은 놈은 <strong>블록 행렬의 한 조각</strong>이다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">여기서 Woodbury가 바로 나온다</div>
+    <p>
+      블록 역행렬 공식을 쓰면 (세부 전개는 생략),
+      $S^{-1}=(D+WKW^T)^{-1}$는
+      $$S^{-1}=D^{-1}-D^{-1}W\,(K^{-1}+W^TD^{-1}W)^{-1}\,W^TD^{-1}$$
+      로 떨어진다.
+      <br/>
+      천박 결론: <strong>큰 inverse를 작은 inverse로 바꾸는 건 “꼼수”가 아니라,
+      블록 구조에서 나오는 합법적인 결과</strong>다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="gp-inducing">Bonus B) GP / Inducing Points: n×n을 포기하고 m×m 방에서 끝내기</h2>
+
+  <p>
+    Gaussian Process(GP)에서 데이터 $n$개면 원래는
+    $$\bigl(K_{nn}+\sigma^2 I\bigr)^{-1}$$
+    같은 <strong>$n\times n$ inverse</strong>가 튀어나온다.
+    그대로 하면 비용이 $O(n^3)$이라 “현실”에서 바로 장례식이다.
+  </p>
+
+  <p>
+    그래서 inducing points $m\ll n$개를 잡고
+    “커널을 저랭크로 근사”한다:
+    $$Q_{nn}=K_{nm}K_{mm}^{-1}K_{mn}.$$
+    그러면 핵심 inverse가
+    $$\bigl(\sigma^2 I + Q_{nn}\bigr)^{-1}$$
+    꼴로 바뀌고, 이때 <strong>Woodbury를 박으면</strong>:
+    $$\bigl(\sigma^2 I + K_{nm}K_{mm}^{-1}K_{mn}\bigr)^{-1}
+      =\sigma^{-2}I-\sigma^{-2}K_{nm}\Bigl(K_{mm}+\sigma^{-2}K_{mn}K_{nm}\Bigr)^{-1}K_{mn}\sigma^{-2}.$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">번역: inverse는 관측공간이 아니라 “유도점 방”에서</div>
+    <p>
+      $n\times n$을 뒤집지 않는다.
+      진짜로 뒤집는 건
+      $$\Bigl(K_{mm}+\sigma^{-2}K_{mn}K_{nm}\Bigr)^{-1}\in\mathbb{R}^{m\times m}$$
+      이 작은 놈이다.
+      <br/>
+      결론: <strong>GP 스케일링의 심장은 Woodbury</strong>다.
+      “큰 커널은 포기하고, $m$개의 inducing point 공간에서만 싸운다.”
+    </p>
+  </div>
+
+  <hr/>
+
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

@@ -135,6 +135,24 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
+      "LP",
+      "Duality",
+      "KKT",
+      "Simplex",
+      "ActiveSet",
+      "ReducedCost"
+    ],
+    "title": "LP, 듀얼, 그리고 꿀통",
+    "message": "더 벌고 싶은 방향으로 가면 왜 갑자기 손해가 되는지… 알고 보니 다 reduced cost 때문이었네 🤯💸"
+  },
+  {
+    "date": "2026-01-09",
+    "filename": "thumbnail/slide-zgfysCfy0zg.jpg",
+    "sourceURL": "https://unsplash.com/photos/a-woman-walking-down-a-street-holding-an-umbrella-zgfysCfy0zg",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
       "keyword"
     ],
     "title": "",
