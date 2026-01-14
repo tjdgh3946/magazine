@@ -14,6 +14,17 @@
       background-color: transparent;
       text-decoration: none;
     }
+
+    .mast__brand{
+  display: flex;
+  align-items: center;
+}
+
+.tokia-logo{
+  height: 100px;   /* 헤더용이니까 작게 */
+  width: auto;
+  display: block;
+}
 </style>
 
 <!-- JS 모듈 엔트리 -->
@@ -39,8 +50,10 @@
 </head>
 <body>
   <header class="mast">
-  <a href="../index.html" class="mast__brand""><span style color='black'>MAGAZINE</span></a>
-  </header>
+  <a href="../index.html" class="mast__brand">
+    <img src="../tokiaLogo.png" alt="The Tokia Blog" class="tokia-logo">
+  </a>
+</header>
 
   
     <!-- 왼쪽 사이드바 -->
