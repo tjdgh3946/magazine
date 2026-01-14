@@ -399,3 +399,25 @@
     border-top: 1px solid #ddd;
     text-align: left;
 }
+
+
+  .mast__brand{
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    z-index: 999999;
+  }
+
+  @media (max-width: 1100px){
+    .mast__brand{
+      display: none;
+    }
+  }
+
+  .tokia-logo{
+    height: 65px;   /* 헤더용이니까 작게 */
+    width: auto;
+    display: block;
+  }
