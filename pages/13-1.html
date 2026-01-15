@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ja">
+<style>
+  /* 중앙 기사 영역 */
+.article{
+  width: min(var(--maxw), 100%);
+  margin: 0 auto;
+}
+</style>
+  <style>
+    /* equation number 색상만 적용 */
+    a:link {
+      color: #2222bb;
+      background-color: transparent;
+      text-decoration: none;
+    }
+</style>
+
+<!-- JS 모듈 엔트리 -->
+<script src="../metadata.js"></script>
+<script src="../assets/js/marquee.js"></script>
+<script type="module" src="../assets/js/init.js"></script>
+
+<head>
+  <meta charset="utf-8">
+    <title>Tokia</title>
+   <link rel="icon" type="image/png" href="../tokiaProfile.PNG">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="%%PAGE_DESCRIPTION%%">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- CSS 모듈 -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/toc.css">
+
+  <script src="../assets/js/mathjax-config.js"></script>  
+
+</head>
+<body>
+  <header class="mast">
+   <a href="../index.html" class="mast__brand">
+    <img src="../tokiaLogo_w.PNG" alt="The Tokia Blog" class="tokia-logo">
+  </a>
+  </header>
+
+  
+    <!-- 왼쪽 사이드바 -->
+    <div class="wrap">
+    <aside class="l-rail" aria-label="side marquee">
+      <div class="side-marquee">
+        <div class="side-track" id="sideTrack"></div>
+      </div>
+    </aside>
+  
+    <main class="article">
+
+      <!--div class="category">🖋 Conditional Expectation</div-->
+
+      <section class="title-box">
+        <h1>Dual 문제 만드는 법은 이렇게 외워라</h1>
+        <p class="dek"></p>
+        <div class="date">15 Jan 2026</div>
+      </section>
+
+      <article class="body">
+        <!-- WRITE GODDAMN MAGAZINE-->
+         <p>
+    오늘의 주제는 <strong>Linear Programming의 Dual 문제</strong>.
+    <strong>제약은 돈이고, 듀얼은 그 가격표다.</strong>
+    <br>
+    Primal에서 자원 묶어놓으면,
+    Dual에서는 “그 자원 하나 더 주면 얼마냐?”를 묻는다.
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">한눈에</div>
+    <p>
+      <strong>Primal</strong>: “이 제약들 안에서 최대한 뽑아먹자”
+      <br/>
+      <strong>Dual</strong>: “각 제약에 가격을 매겨서,
+      그 가격으로는 절대 손해 안 보게 하자”
+      <br/>
+      결론:
+      <strong>Primal이 max면 Dual은 min,
+      제약과 변수가 서로 역할을 바꾼다.</strong>
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="setup">0) 셋업: 이 꼴 아니면 시작도 하지 마라</h2>
+
+  <p>
+    Dual을 구하려면 Primal을 <strong>무조건</strong> 이 형태로 맞춘다:
+    $$\max\; c^T x \quad \text{s.t. } Ax \le b,\; x \ge 0$$
+    <br/>
+    max인지, $\le$인지, $x\ge0$인지 확인 안 하고 듀얼 만들면
+    <strong>거의 확정으로 틀린다.</strong>
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">규칙 0번</div>
+    <p>
+      <strong>형태 안 맞으면 듀얼 만들 생각도 하지 마라.</strong>
+      <br/>
+      이건 취향이 아니라 규칙이다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="step1">1) 제약 수 = 듀얼 변수 수</h2>
+
+  <p>
+    Primal에 제약이 $m$개 있으면,
+    Dual에는 듀얼 변수가 정확히 $m$개 생긴다.
+    <br/>
+    이건 이유 생각할 필요 없다.
+    <strong>반사신경으로 튀어나와야 한다.</strong>
+  </p>
+
+  <p>
+    $$Ax \le b \quad \Rightarrow \quad y_1,\dots,y_m$$
+  </p>
+
+  <hr/>
+
+  <h2 id="step2">2) 목적함수는 뒤집고, RHS를 그대로 긁어온다</h2>
+
+  <p>
+    Primal이 max면 Dual은 min이다.
+    그리고 Dual 목적함수 계수는
+    <strong>Primal 제약의 RHS를 그대로 복사</strong>한다.
+  </p>
+
+  <p>
+    $$\min\; b^T y$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">규칙 1번</div>
+    <p>
+      <strong>Dual 목적함수는 RHS 모음집이다.</strong>
+      <br/>
+      여기서 틀리면 그냥 끝이다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="step3">3) 변수 하나 잡고, 계수 다 긁어모아라</h2>
+
+  <p>
+    이제 진짜 핵심.
+    <br/>
+    <strong>Primal 변수 하나당 Dual 제약 하나</strong>가 생긴다.
+  </p>
+
+  <p>
+    Primal 변수 $x_j$를 잡고,
+    그 변수가 들어간 모든 제약의 계수를 모으면:
+    $$\sum_i A_{ij} y_i \ge c_j$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">규칙 2번</div>
+    <p>
+      <strong>“변수 하나 잡고, 거기 붙은 계수 다 긁어모아라.”</strong>
+      <br/>
+      이게 Dual 제약이다.
+    </p>
+  </div>
+
+  <hr/>
+
+  <h2 id="signs">4) 부호 규칙: 여기서 다들 터진다</h2>
+
+  <p>
+    (Primal이 max 문제일 때)
+  </p>
+
+  <ul>
+    <li>$\le$ 제약 → 듀얼 변수 $\ge 0$</li>
+    <li>$=$ 제약 → 듀얼 변수 자유변수</li>
+    <li>$\ge$ 제약 → 듀얼 변수 $\le 0$</li>
+  </ul>
+
+  <p>
+    반대로,
+  </p>
+
+  <ul>
+    <li>$x \ge 0$ → 듀얼 제약 $\ge$</li>
+    <li>$x \le 0$ → 듀얼 제약 $\le$</li>
+    <li>$x$ 자유변수 → 듀얼 제약 $=$</li>
+  </ul>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">규칙 3번</div>
+    <p>
+      <strong>제약이 자유로우면 변수도 자유롭고,
+      변수가 자유로우면 제약은 빡세게 등호다.</strong>
+    </p>
+  </div>
+
+  <hr/>
+   <h2 id="panic">5) 실전에서 안 당황하는 “체크리스트”</h2>
+
+  <p>
+    듀얼 만들다가 멘붕 오는 순간은 거의 항상 여기다:
+  </p>
+    <div class="ginzabox">
+    <div class="ginzabox-title">실전 체크 4종 세트</div>
+    <ul>
+      <li><strong>제약 부호</strong>: $\le/\ge/=$ 를 듀얼 변수 부호로 옮겼나?</li>
+      <li><strong>변수 부호</strong>: $x\ge0/x\le0/x\ \text{free}$ 를 듀얼 제약 기호로 옮겼나?</li>
+      <li><strong>“변수 하나 잡고 계수 긁기”</strong>: 각 듀얼 제약에 들어가는 계수 다 맞나?</li>
+      <li><strong>차원</strong>: 듀얼 변수 개수 = primal 제약 개수 / 듀얼 제약 개수 = primal 변수 개수</li>
+    </ul>
+  </div>
+
+  <hr/>
+
+  <h2 id="example">6) 실전 예시: 분포 $p_i$ LP에서 듀얼을 손으로 뽑기</h2>
+
+  <p>
+    이제 진짜 “현실 예시” 하나 박자.
+    아래 Primal은 분포 $p_i$를 고르는 문제다:
+  </p>
+
+  <p>
+    $$\max_{p}\;\sum_{i=0}^m a_i p_i$$
+    s.t.
+    $$\sum_{i=0}^m i\,p_i \le 2m\delta,\qquad
+      \sum_{i=0}^m p_i = 1,\qquad
+      p_i\ge 0\ \quad \forall i.$$
+  </p>
+
+  <h3 id="example-step1">6.1) 듀얼 변수 세우기</h3>
+  <p>
+    제약이 두 개니까 듀얼 변수도 두 개:
+  </p>
+  <ul>
+    <li>$\sum i p_i \le 2m\delta$ $\Leftrightarrow$ $\alpha \ge 0$</li>
+    <li>$\sum p_i = 1$ $\Leftrightarrow$ $\beta \in \mathbb{R}$ (자유변수)</li>
+  </ul>
+
+  <h3 id="example-step2">6.2) 듀얼 목적함수 (RHS 복붙)</h3>
+  <p>
+    RHS만 그대로 가져오면 끝:
+    $$\min_{\alpha,\beta}\; 2m\delta\,\alpha + \beta.$$
+  </p>
+
+  <h3 id="example-step3">6.3) “변수 하나 잡고 계수 긁기”로 듀얼 제약 만들기</h3>
+  <p>
+    Primal 변수는 $p_0,\dots,p_m$ (총 $m+1$개).
+    따라서 듀얼 제약도 $m+1$개가 생긴다.
+  </p>
+
+  <p>
+    각 $p_i$를 하나 잡자. 그럼:
+  </p>
+  <ul>
+    <li>첫 번째 제약에서 $p_i$의 계수는 $i$</li>
+    <li>두 번째 제약에서 $p_i$의 계수는 $1$</li>
+  </ul>
+
+  <p>
+    계수 긁어서 듀얼 변수로 가중합 만들면:
+    $$i\alpha + 1\cdot\beta \ge a_i\qquad(\forall i=0,\dots,m).$$
+  </p>
+
+  <div class="ginzabox">
+    <div class="ginzabox-title">여기서 당황 금지</div>
+    <p>
+      <strong>$p_i\ge0$라서</strong> 듀얼 제약이 <strong>$\ge$</strong>로 나온다.
+      <br/>
+      만약 $p_i$가 자유변수였으면 여기 등호가 된다: $$i\alpha+\beta=a_i.$$
+    </p>
+  </div>
+
+  <h3 id="example-final">6.4) 최종 듀얼</h3>
+  <p>
+    그래서 듀얼은 이렇게 완성된다:
+    $$\min_{\alpha,\beta}\; 2m\delta\,\alpha + \beta$$
+    s.t.
+    $$\alpha i + \beta \ge a_i\quad \forall i,\qquad \alpha\ge0,\;\beta\in\mathbb{R}.$$
+  </p>
+
+  <hr/>
+
+  <h2 id="summary">7) 최종 요약: 이 문장 하나면 끝</h2>
+
+  <p>
+    Dual은 이렇게 외워라:
+  </p>
+
+  <div class="ginzabox">
+    <p>
+      <strong>
+        “제약은 변수로, 변수는 제약으로,
+        RHS는 목적함수로 전부 뒤집고,
+        마지막에 부호 규칙으로 뚜껑 덮어라.”
+      </strong>
+    </p>
+  </div>
+
+  <p>
+    이 문장이 머리에 남아 있으면,
+    시험장에서 Dual은 계산 문제가 아니라
+    <strong>기계적인 변환 문제</strong>가 된다.
+  </p>  
+    <footer class="tag-footer">
+      <div id="tagTrack"></div>
+    </footer>  
+    </article>
+    
+  </main>
+
+    <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+            <!-- 오른쪽 메뉴 -->
+    <aside class="r-rail">
+      <div class="menu">
+        <div class="menu-block search-box" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Search by keyword…" />
+          <span class="search-icon" id="searchIcon">🔍</span>
+        </div>
+      
+        <div class="menu-block">
+          <a href="../notes.html" target="_blank" class="menu-link">
+            <span class="menu-label">Notes</span>
+            📚
+          </a>
+        </div>
+
+        <div class="menu-block">
+          <button type="button" class="refresh-button" id="refreshBtn">
+            <span class="menu-label">Refresh</span>
+            🔄
+          </button>
+        </div>
+        <div class="menu-block">
+          <div class="toc-hover">
+            <button type="button" class="toc-icon" aria-haspopup="true" aria-expanded="false" aria-controls="tocPanel">
+              📋
+            </button>
+            <nav id="tocPanel" class="toc-panel" aria-label="Table of contents">
+               <h2 class="toc-title">Table of Contents</h2>
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </aside>
+      </div>
+    </aside>
+  </div>
+</body>
+
+</html>

@@ -169,6 +169,36 @@ window.imageData = [
     "imageCount": 1,
     "caption": "placeholder",
     "keywords": [
+      "schur complement",
+      "mutual information",
+      "information gain",
+      "log det",
+      "gaussian entropy"
+    ],
+    "title": "Schur Complement, 정보 뽑는 정산표",
+    "message": "관측 하나 넣었을 뿐인데… 불확실성 ‘부피(log-det)’가 줄어든 만큼이 그대로 정보(MI)로 청구되는 거였네 🤯🧾📉"
+  },
+  {
+    "date": "2026-01-15",
+    "filename": "thumbnail/slide-PYmZ1Ggj2ow.jpg",
+    "sourceURL": "https://unsplash.com/photos/people-walking-on-street-during-night-time-PYmZ1Ggj2ow",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
+      "keyword"
+    ],
+    "title": "",
+    "message": ""
+  },
+  {
+    "date": "2026-01-15",
+    "filename": "thumbnail/slide-23siPDPkd8A.jpg",
+    "sourceURL": "https://unsplash.com/photos/neon-signs-in-japanese-script-and-torii-gate-23siPDPkd8A",
+    "styleHint": "japan",
+    "imageCount": 1,
+    "caption": "placeholder",
+    "keywords": [
       "keyword"
     ],
     "title": "",
