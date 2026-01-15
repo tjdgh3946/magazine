@@ -223,71 +223,146 @@
 
   <hr/>
 
-  <h2 id="example">6) 실전 예시: 분포 $p_i$ LP에서 듀얼을 손으로 뽑기</h2>
+  <h2 id="example-dist-dual">6) 실전 예시: 분포 $p_i$ LP에서 듀얼을 “정석 라그랑지안”으로 뽑기</h2>
 
+<p>
+  이제 진짜 “현실 예시” 하나 박자.
+  아래 Primal은 분포 $p=(p_0,\dots,p_m)$를 고르는 문제다:
+</p>
+
+<p>
+  $$\max_{p}\;\sum_{i=0}^m a_i p_i$$
+  s.t.
+  $$\sum_{i=0}^m i\,p_i \le 2m\delta,\qquad
+    \sum_{i=0}^m p_i = 1,\qquad
+    p_i\ge 0\ \ \forall i.$$
+</p>
+
+<hr/>
+
+<h3 id="example-dist-step1">6.1) 듀얼 변수 세우기 (정석 부호 포함)</h3>
+
+<p>
+  제약이 두 개니까 듀얼 변수도 두 개:
+</p>
+
+<ul>
+  <li>
+    평균 제약 $\sum_{i=0}^m i\,p_i \le 2m\delta$
+    &nbsp;↔&nbsp; $\alpha \ge 0$
+  </li>
+  <li>
+    정규화 제약 $\sum_{i=0}^m p_i = 1$
+    &nbsp;↔&nbsp; $\beta \in \mathbb{R}$ (자유변수)
+  </li>
+</ul>
+
+<div class="ginzabox">
+  <div class="ginzabox-title">왜 $\alpha\ge0$고 $\beta$는 자유냐?</div>
   <p>
-    이제 진짜 “현실 예시” 하나 박자.
-    아래 Primal은 분포 $p_i$를 고르는 문제다:
+    $\le$ 제약은 “한 방향 위반”이라 가격표(승수)가 음수면 상계/하계 성질이 깨진다 → $\alpha\ge0$.
+    <br/>
+    $=$ 제약은 위반이 양/음 둘 다 가능 → 한쪽 부호로 묶으면 반쪽짜리라서 $\beta$는 자유변수.
   </p>
+</div>
 
+<hr/>
+
+<h3 id="example-dist-step2">6.2) 라그랑지안 쓰기</h3>
+
+<p>
+  제약을 $g(p)\le0$, $h(p)=0$ 형태로 맞춰서 라그랑지안을 만든다:
+</p>
+
+<p>
+  $$g(p)=\sum_{i=0}^m i\,p_i - 2m\delta \le 0,\qquad
+    h(p)=\sum_{i=0}^m p_i - 1 = 0.$$
+</p>
+
+<p>
+  그러면 라그랑지안은
+  $$\mathcal{L}(p,\alpha,\beta)
+  =\sum_{i=0}^m a_i p_i
+  \;-\;\alpha\Big(\sum_{i=0}^m i\,p_i - 2m\delta\Big)
+  \;-\;\beta\Big(\sum_{i=0}^m p_i - 1\Big).$$
+</p>
+
+<p>
+  전개해서 “$p_i$ 앞 계수”로 정리하면:
+  $$\mathcal{L}(p,\alpha,\beta)
+  = 2m\delta\,\alpha+\beta
+  +\sum_{i=0}^m p_i\Big(a_i-\alpha i-\beta\Big).$$
+</p>
+
+<div class="ginzabox">
+  <div class="ginzabox-title">여기서 핵심</div>
   <p>
-    $$\max_{p}\;\sum_{i=0}^m a_i p_i$$
-    s.t.
-    $$\sum_{i=0}^m i\,p_i \le 2m\delta,\qquad
-      \sum_{i=0}^m p_i = 1,\qquad
-      p_i\ge 0\ \quad \forall i.$$
+    라그랑지안을 항상 이렇게 만든다:
+    <strong>상수항 + $\sum_i p_i(\text{계수})$</strong>.
+    <br/>
+    이제 듀얼은 “$\sup_{p\ge0}$를 유한하게 만드는 조건”을 뽑으면 끝.
   </p>
+</div>
 
-  <h3 id="example-step1">6.1) 듀얼 변수 세우기</h3>
+<hr/>
+
+<h3 id="example-dist-step3">6.3) 듀얼 함수 $g(\alpha,\beta)=\sup_{p\ge0}\mathcal{L}(p,\alpha,\beta)$</h3>
+
+<p>
+  듀얼 함수는 정의대로:
+  $$g(\alpha,\beta)=\sup_{p\ge0}\Big[2m\delta\,\alpha+\beta
+  +\sum_{i=0}^m p_i\big(a_i-\alpha i-\beta\big)\Big].$$
+</p>
+
+<p>
+  여기서 $p_i\ge0$라서 다음이 중요하다:
+</p>
+
+<ul>
+  <li>
+    만약 어떤 $i$에서 $(a_i-\alpha i-\beta)>0$이면,
+    $p_i\to\infty$로 키워서 $\mathcal{L}\to+\infty$가 된다.
+    → 듀얼함수 $g(\alpha,\beta)=+\infty$로 터짐.
+  </li>
+  <li>
+    따라서 유한하려면 모든 $i$에 대해
+    $$a_i-\alpha i-\beta \le 0$$
+    즉
+    $$\alpha i+\beta \ge a_i\qquad(\forall i=0,\dots,m)$$
+    가 필요하다.
+  </li>
+  <li>
+    이 조건이 성립하면 $\sum_i p_i(\cdot)$는 최대가 $0$ (최댓값은 $p_i=0$에서),
+    그래서
+    $$g(\alpha,\beta)=2m\delta\,\alpha+\beta.$$
+  </li>
+</ul>
+
+<hr/>
+
+<h3 id="example-dist-step4">6.4) 최종 듀얼</h3>
+
+<p>
+  듀얼 문제는 $g(\alpha,\beta)$를 최소화하는 것:
+</p>
+
+<p>
+  $$\min_{\alpha,\beta}\; 2m\delta\,\alpha+\beta$$
+  s.t.
+  $$\alpha i+\beta \ge a_i\quad \forall i=0,\dots,m,\qquad
+    \alpha\ge0,\;\beta\in\mathbb{R}.$$
+</p>
+
+<div class="ginzabox">
+  <div class="ginzabox-title">여기서 당황 금지</div>
   <p>
-    제약이 두 개니까 듀얼 변수도 두 개:
+    <strong>$p_i\ge0$라서</strong> 듀얼 제약이 <strong>$\ge$</strong>로 나온다.
+    <br/>
+    만약 $p_i$가 자유변수였다면, $\sup_p$가 유한하려면 계수가 0이어야 해서
+    $$\alpha i+\beta=a_i$$
+    같은 <strong>등호</strong>로 바뀐다.
   </p>
-  <ul>
-    <li>$\sum i p_i \le 2m\delta$ $\Leftrightarrow$ $\alpha \ge 0$</li>
-    <li>$\sum p_i = 1$ $\Leftrightarrow$ $\beta \in \mathbb{R}$ (자유변수)</li>
-  </ul>
-
-  <h3 id="example-step2">6.2) 듀얼 목적함수 (RHS 복붙)</h3>
-  <p>
-    RHS만 그대로 가져오면 끝:
-    $$\min_{\alpha,\beta}\; 2m\delta\,\alpha + \beta.$$
-  </p>
-
-  <h3 id="example-step3">6.3) “변수 하나 잡고 계수 긁기”로 듀얼 제약 만들기</h3>
-  <p>
-    Primal 변수는 $p_0,\dots,p_m$ (총 $m+1$개).
-    따라서 듀얼 제약도 $m+1$개가 생긴다.
-  </p>
-
-  <p>
-    각 $p_i$를 하나 잡자. 그럼:
-  </p>
-  <ul>
-    <li>첫 번째 제약에서 $p_i$의 계수는 $i$</li>
-    <li>두 번째 제약에서 $p_i$의 계수는 $1$</li>
-  </ul>
-
-  <p>
-    계수 긁어서 듀얼 변수로 가중합 만들면:
-    $$i\alpha + 1\cdot\beta \ge a_i\qquad(\forall i=0,\dots,m).$$
-  </p>
-
-  <div class="ginzabox">
-    <div class="ginzabox-title">여기서 당황 금지</div>
-    <p>
-      <strong>$p_i\ge0$라서</strong> 듀얼 제약이 <strong>$\ge$</strong>로 나온다.
-      <br/>
-      만약 $p_i$가 자유변수였으면 여기 등호가 된다: $$i\alpha+\beta=a_i.$$
-    </p>
-  </div>
-
-  <h3 id="example-final">6.4) 최종 듀얼</h3>
-  <p>
-    그래서 듀얼은 이렇게 완성된다:
-    $$\min_{\alpha,\beta}\; 2m\delta\,\alpha + \beta$$
-    s.t.
-    $$\alpha i + \beta \ge a_i\quad \forall i,\qquad \alpha\ge0,\;\beta\in\mathbb{R}.$$
-  </p>
+</div
 
   <hr/>
 
@@ -334,7 +409,7 @@
 
 <hr/>
 
-<h3 id="example-step2">7.2) 듀얼 함수 $g(\lambda,\nu)=\inf_x L(x,\lambda,\nu)$</h3>
+<h3 id="example-step2">7.2) 듀얼 함수 $g(\lambda,\nu)=\inf_{\color{#2563EB}x} L({\color{#2563EB}x},{\color{#E11D48}\lambda,\nu})$</h3>
 
 <p>
   $$g(\lambda,\nu)=\inf_x L(x,\lambda,\nu)
