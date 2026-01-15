@@ -291,7 +291,96 @@
 
   <hr/>
 
-  <h2 id="summary">7) 최종 요약: 이 문장 하나면 끝</h2>
+  <h2 id="example-lp-dual-fn">7) 실전 예시: LP 표준형에서 Lagrange dual function 손으로 뽑기</h2>
+
+<p>
+  이제 진짜 “교과서 표준형”으로 한 번 박자.
+  아래 Primal은 LP의 standard form:
+</p>
+
+<p>
+  $$\min_x\; c^T x \qquad \text{s.t.}\quad Ax=b,\; x\ge 0.$$
+</p>
+
+<div class="ginzabox">
+  <div class="ginzabox-title">실전 포인트</div>
+  <p>
+    등호 제약 $Ax=b$는 <strong>자유변수</strong> 듀얼승수($\nu\in\mathbb{R}^m$)가 붙고,
+    비음수 제약 $x\ge0$는 $-x\le0$로 바꿔서 <strong>양수</strong> 듀얼승수($\lambda\ge0$)가 붙는다.
+  </p>
+</div>
+
+<hr/>
+
+<h3 id="example-step1">7.1) 라그랑지안 세팅</h3>
+
+<p>
+  $$L(x,\lambda,\nu)
+  = c^T x \;-\; \sum_{i=1}^n \lambda_i x_i \;+\; \nu^T(Ax-b).$$
+</p>
+
+<p>
+  정리하면:
+  $$L(x,\lambda,\nu)= -b^T\nu + (c + A^T\nu - \lambda)^T x.$$
+</p>
+
+<div class="ginzabox">
+  <div class="ginzabox-title">규칙 2번 (여기서 그대로 씀)</div>
+  <p>
+    <strong>변수 하나($x_i$) 잡고 계수 다 긁어모으면</strong>
+    그게 $x$ 앞에 붙는 벡터 계수 $(c + A^T\nu - \lambda)$로 모인다.
+  </p>
+</div>
+
+<hr/>
+
+<h3 id="example-step2">7.2) 듀얼 함수 $g(\lambda,\nu)=\inf_x L(x,\lambda,\nu)$</h3>
+
+<p>
+  $$g(\lambda,\nu)=\inf_x L(x,\lambda,\nu)
+  = -b^T\nu + \inf_x (c + A^T\nu - \lambda)^T x.$$
+</p>
+
+<p>
+  여기서 핵심:
+  <br/>
+  <strong>$(c + A^T\nu - \lambda)\neq 0$이면</strong>
+  $x$를 적당히 보내서 선형항을 $-\infty$로 떨어뜨릴 수 있다.
+  <br/>
+  그래서 $g(\lambda,\nu)$가 유한하려면 <strong>계수가 0이어야만</strong> 한다:
+</p>
+
+<p>
+  $$c + A^T\nu - \lambda = 0.$$
+</p>
+
+<p>
+  따라서 듀얼 함수는
+</p>
+
+<p>
+  $$g(\lambda,\nu)=
+  \begin{cases}
+  -b^T\nu & (A^T\nu - \lambda + c = 0,\;\lambda\ge0),\\
+  -\infty & \text{otherwise}.
+  \end{cases}$$
+</p>
+
+<hr/>
+
+<h3 id="example-step3">7.3) (참고) 듀얼 “문제” 형태로 쓰기</h3>
+
+<p>
+  듀얼 문제는 $g$를 최대화하는 것:
+</p>
+
+<p>
+  $$\max_{\lambda,\nu}\; -b^T\nu
+  \quad \text{s.t.}\quad A^T\nu - \lambda + c = 0,\;\lambda\ge0.$$
+</p>
+
+  <hr/>
+  <h2 id="summary">8) 최종 요약: 이 문장 하나면 끝</h2>
 
   <p>
     Dual은 이렇게 외워라:
